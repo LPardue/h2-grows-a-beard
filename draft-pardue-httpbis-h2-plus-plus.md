@@ -19,12 +19,12 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "H"
-abbrev: "TODO - Abbreviation"
+title: "HTTP/2 Plus Plus"
+abbrev: "H2++"
 category: info
 
 docname: draft-pardue-httpbis-h2-plus-plus
-submissiontype: IETF 
+submissiontype: IETF
 number:
 date:
 consensus: true
