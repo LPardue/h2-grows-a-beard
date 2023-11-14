@@ -9,19 +9,19 @@ number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: "Applications and Real-Time"
+workgroup: "HTTP"
 keyword:
  - next generation
  - riker
  - beard
 venue:
-  group: WG
-  type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
-  github: USER/REPO
-  latest: https://example.com/LATEST
+  group: "HTTP"
+  type: "Working Group"
+  mail: "ietf-http-wg@w3.org"
+  arch: "https://lists.w3.org/Archives/Public/ietf-http-wg/"
+  github: "LPardue/h2-grows-a-beard"
+  latest: "https://LPardue.github.io/h2-grows-a-beard/draft-pardue-httpbis-h2-plus-plus.html"
 
 author:
  -
