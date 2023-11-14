@@ -26,8 +26,8 @@ venue:
 author:
  -
     fullname: "Lucas Pardue"
-    organization: Your Organization Here
-    email: "lucas@cloudflare.com"
+    organization: Cloudflare
+    email: "lucapardue.24.7@gmail.com"
 
 normative:
 
