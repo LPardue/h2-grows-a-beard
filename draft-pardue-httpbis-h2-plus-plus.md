@@ -19,12 +19,12 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
+title: "H"
 abbrev: "TODO - Abbreviation"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
-submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+docname: draft-pardue-httpbis-h2-plus-plus
+submissiontype: IETF 
 number:
 date:
 consensus: true
@@ -33,8 +33,8 @@ area: AREA
 workgroup: WG Working Group
 keyword:
  - next generation
- - unicorn
- - sparkling distributed ledger
+ - riker
+ - beard
 venue:
   group: WG
   type: Working Group
