@@ -45,7 +45,7 @@ informative:
 
 This document defines HTTP/2 Plus Plus, an HTTP mapping to TCP that is inspired
 by HTTP/2. It shares many concepts but has a slightly different feature set.
-Difference make the wire image incompatible but translation to HTTP/2 is
+Differences make the wire image incompatible but translation to HTTP/2 is
 possible.
 
 
@@ -75,7 +75,7 @@ HTTP/2 Plus Plus provides an optimized transport for HTTP semantics. HTTP/2
 HTTP/2 Plus Plus supports all of the core features of HTTP but aims to be more
 efficient than HTTP/1.1.
 
-HTTP/2 HTTP/2 Plus Plus is a connection-oriented application-layer protocol that
+HTTP/2 Plus Plus is a connection-oriented application-layer protocol that
 runs over a TCP connection ({{TCP}}). The client is the TCP connection
 initiator.
 
@@ -113,7 +113,8 @@ The following terms are used:
 
 client:
 
-: The endpoint that initiates an HTTP/2 connection. Clients send HTTP requests and receive HTTP responses.
+: The endpoint that initiates an HTTP/2 Plus Plus connection. Clients send HTTP
+requests and receive HTTP responses.
 
 connection:
 
@@ -121,13 +122,13 @@ connection:
 
 connection error:
 
-: An error that affects the entire HTTP/2 connection.
+: An error that affects the entire HTTP/2 Plus Plus connection.
 
 endpoint:
 : Either the client or server of the connection.
 
 frame:
-: The smallest unit of communication within an HTTP/2 connection, consisting of a
+: The smallest unit of communication within an HTTP/2 Plus Plus connection, consisting of a
 header and a variable-length sequence of bytes structured according to the frame
 type.
 
@@ -142,14 +143,14 @@ sender:
 : An endpoint that is transmitting frames.
 
 server:
-: The endpoint that accepts an HTTP/2 connection. Servers receive HTTP requests
+: The endpoint that accepts an HTTP/2 Plus Plus connection. Servers receive HTTP requests
 and send HTTP responses.
 
 stream:
-: A bidirectional flow of frames within the HTTP/2 connection.
+: A bidirectional flow of frames within the HTTP/2 Plus Plus connection.
 
 stream error:
-: An error on the individual HTTP/2 stream.
+: An error on the individual HTTP/2 Plus Plus stream.
 
 Finally, the terms "gateway", "intermediary", "proxy", and "tunnel" are defined
 in Section 3.7 of {{RFC9110}}. Intermediaries act as both client and server at
@@ -161,7 +162,7 @@ of RFC9110}}.
 # Starting HTTP/2 Plus Plus
 
 Implementations that generate HTTP requests need to discover whether a server
-supports HTTP/2.
+supports HTTP/2 Plus Plus.
 
 HTTP/2 Plus Plus uses only the "https" URI scheme defined in {{Section 4.2 of
 RFC9110}}, with the same default port numbers as HTTP/1.1 {{RFC9112}}. The URI
@@ -365,7 +366,8 @@ SETTINGS Frame {
 ~~~
 {: title="SETTINGS Frame"}
 
-An implementation MUST ignore any parameter with an identifier it does not understand.
+An implementation MUST ignore any parameter with an identifier it does not
+understand.
 
 #### Defined SETTINGS Parameters
 
@@ -418,7 +420,8 @@ higher priority than any other frame.
 
 PING frames are not associated with any individual stream. If a PING frame is
 received with a Stream Identifier field value other than 0x00, the recipient
-MUST respond with a connection error ({{connection-error-handling}}) of type PROTOCOL_ERROR.
+MUST respond with a connection error ({{connection-error-handling}}) of type
+PROTOCOL_ERROR.
 
 Receipt of a PING frame with a length field value other than 8 MUST be treated
 as a connection error ({{connection-error-handling}}) of type FRAME_SIZE_ERROR.
@@ -437,7 +440,10 @@ might be processed on the sending endpoint in this connection. For instance, if
 the server sends a GOAWAY frame, the identified stream is the highest-numbered
 stream initiated by the client.
 
-Once the GOAWAY is sent, the sender will ignore frames sent on streams initiated by the receiver if the stream has an identifier higher than the included last stream identifier. Receivers of a GOAWAY frame MUST NOT open additional streams on the connection, although a new connection can be established for new streams.
+Once the GOAWAY is sent, the sender will ignore frames sent on streams initiated
+by the receiver if the stream has an identifier higher than the included last
+stream identifier. Receivers of a GOAWAY frame MUST NOT open additional streams
+on the connection, although a new connection can be established for new streams.
 
 If the receiver of the GOAWAY has sent data on streams with a higher stream
 identifier than what is indicated in the GOAWAY frame, those streams are not or
@@ -502,14 +508,14 @@ have retried unprocessed requests on another connection.
 
 A client that is unable to retry requests loses all requests that are in flight
 when the server closes the connection. This is especially true for
-intermediaries that might not be serving clients using HTTP/2. A server that is
-attempting to gracefully shut down a connection SHOULD send an initial GOAWAY
-frame with the last stream identifier set to $BIG_NUMBER and a NO_ERROR code.
-This signals to the client that a shutdown is imminent and that initiating
-further requests is prohibited. After allowing time for any in-flight stream
-creation (at least one round-trip time), the server MAY send another GOAWAY
-frame with an updated last stream identifier. This ensures that a connection can
-be cleanly shut down without losing requests.
+intermediaries that might not be serving clients using HTTP/2 Plus Plus. A
+server that is attempting to gracefully shut down a connection SHOULD send an
+initial GOAWAY frame with the last stream identifier set to $BIG_NUMBER and a
+NO_ERROR code. This signals to the client that a shutdown is imminent and that
+initiating further requests is prohibited. After allowing time for any in-flight
+stream creation (at least one round-trip time), the server MAY send another
+GOAWAY frame with an updated last stream identifier. This ensures that a
+connection can be cleanly shut down without losing requests.
 
 After sending a GOAWAY frame, the sender can discard frames for streams
 initiated by the receiver with identifiers higher than the identified last
@@ -604,11 +610,19 @@ discard responses that it cannot process. The size of a field list is calculated
 based on the uncompressed size of fields, including the length of the name and
 value in bytes plus an overhead of 32 bytes for each field.
 
-If an implementation wishes to advise its peer of this limit, it can be conveyed as a number of bytes in the SETTINGS_MAX_FIELD_SECTION_SIZE parameter. An implementation that has received this parameter SHOULD NOT send an HTTP message header that exceeds the indicated size, as the peer will likely refuse to process it. However, an HTTP message can traverse one or more intermediaries before reaching the origin server; see {{Section 3.7 of RFC9110}}. Because this limit is applied separately by each implementation that processes the message, messages below this limit are not guaranteed to be accepted.
+If an implementation wishes to advise its peer of this limit, it can be conveyed
+as a number of bytes in the SETTINGS_MAX_FIELD_SECTION_SIZE parameter. An
+implementation that has received this parameter SHOULD NOT send an HTTP message
+header that exceeds the indicated size, as the peer will likely refuse to
+process it. However, an HTTP message can traverse one or more intermediaries
+before reaching the origin server; see {{Section 3.7 of RFC9110}}. Because this
+limit is applied separately by each implementation that processes the message,
+messages below this limit are not guaranteed to be accepted.
 
 ## Compression State
 
-TODO consider if/how allowing only 1 SETTINGS and not providing a SETTINGS ACK affects the text in RFC 9113.
+TODO consider if/how allowing only 1 SETTINGS and not providing a SETTINGS ACK
+affects the text in RFC 9113.
 
 # Streams and Multiplexing
 
@@ -616,8 +630,8 @@ A "stream" is an independent, bidirectional sequence of frames exchanged between
 the client and server within an HTTP/2 Plus Plus connection. Streams have
 several important characteristics:
 
-* A single HTTP/2 connection can contain multiple concurrently open streams,
-  with either endpoint interleaving frames from multiple streams.
+* A single HTTP/2 Plus Plus connection can contain multiple concurrently open
+  streams, with either endpoint interleaving frames from multiple streams.
 * Streams can be established and used unilaterally or shared by either endpoint.
 * Streams can be closed by either endpoint.
 * The order in which frames are sent is significant. Recipients process frames
@@ -751,8 +765,8 @@ closed:
   RESET_STREAM frame.
 
   : An endpoint MUST NOT send frames on a closed stream. An endpoint MAY treat
-  receipt of any frame on a closed stream as a connection error ({{connection-error-handling}})
-  of type STREAM_CLOSED, except as noted below.
+  receipt of any frame on a closed stream as a connection error
+  ({{connection-error-handling}}) of type STREAM_CLOSED, except as noted below.
 
   : An endpoint that sends a DATA frame of type 0x01 or a HEADERS frame of type
   0x03 or a RESET_STREAM frame might receive a WINDOW_UPDATE or RESET_STREAM
@@ -770,12 +784,12 @@ connection flow-control window.
   : An endpoint can perform this minimal processing for all streams that are in
   the "closed" state. Endpoints MAY use other signals to detect that a peer has
   received the frames that caused the stream to enter the "closed" state and
-  treat receipt of any frame as a connection error ({{connection-error-handling}}) of type
-  PROTOCOL_ERROR. Endpoints can use frames that indicate that the peer has
-  received the closing signal to drive this. Endpoints SHOULD NOT use timers for
-  this purpose. For example, PING frames, receiving data on streams that were
-  created after closing the stream, or responses to requests created after
-  closing the stream.
+  treat receipt of any frame as a connection error
+  ({{connection-error-handling}}) of type PROTOCOL_ERROR. Endpoints can use
+  frames that indicate that the peer has received the closing signal to drive
+  this. Endpoints SHOULD NOT use timers for this purpose. For example, PING
+  frames, receiving data on streams that were created after closing the stream,
+  or responses to requests created after closing the stream.
 
 In the absence of more specific rules, implementations SHOULD treat the receipt
 of a frame that is not expressly permitted in the description of a state as a
@@ -786,9 +800,18 @@ of frames for which the semantics are unknown cannot be treated as an error, as
 the conditions for sending and receiving those frames are also unknown; see
 {{extending}}.
 
-Streams are identified by an unsigned 31-bit integer. Streams initiated by a client MUST use odd-numbered stream identifiers; those initiated by the server MUST use even-numbered stream identifiers. A stream identifier of zero (0x00) is used for connection control messages; the stream identifier of zero cannot be used to establish a new stream.
+Streams are identified by an unsigned 31-bit integer. Streams initiated by a
+client MUST use odd-numbered stream identifiers; those initiated by the server
+MUST use even-numbered stream identifiers. A stream identifier of zero (0x00) is
+used for connection control messages; the stream identifier of zero cannot be
+used to establish a new stream.
 
-The identifier of a newly established stream MUST be numerically greater than all streams that the initiating endpoint has opened or reserved. This governs streams that are opened using a HEADERS frame and streams that are reserved using PUSH_PROMISE. An endpoint that receives an unexpected stream identifier MUST respond with a connection error ({{connection-error-handling}}) of type PROTOCOL_ERROR.
+The identifier of a newly established stream MUST be numerically greater than
+all streams that the initiating endpoint has opened or reserved. This governs
+streams that are opened using a HEADERS frame and streams that are reserved
+using PUSH_PROMISE. An endpoint that receives an unexpected stream identifier
+MUST respond with a connection error ({{connection-error-handling}}) of type
+PROTOCOL_ERROR.
 
 A HEADERS frame will transition the client-initiated stream identified by the
 stream identifier in the frame header from "idle" to "open". A PUSH_PROMISE
@@ -827,13 +850,13 @@ frame ({{window-update}}).
 
 ### Flow-Control Principles
 
-HTTP/2 Plus Plus  stream flow control aims to allow a variety of flow-control
+HTTP/2 Plus Plus stream flow control aims to allow a variety of flow-control
 algorithms to be used without requiring protocol changes. Flow control has the
 following characteristics:
 
-1. Flow control is specific to a connection. HTTP/2 flow control operates
-   between the endpoints of a single hop and not over the entire end-to-end
-   path.
+1. Flow control is specific to a connection. HTTP/2 Plus Plus flow control
+   operates between the endpoints of a single hop and not over the entire
+   end-to-end path.
 2. Flow control is based on WINDOW_UPDATE frames. Receivers advertise how many
    bytes they are prepared to receive on a stream and for the entire
    connection. This is a credit-based scheme.
@@ -852,7 +875,7 @@ following characteristics:
    blocked by flow control.
 6. An endpoint can choose to disable its own flow control, but an endpoint
    cannot ignore flow-control signals from its peer.
-7. HTTP/2 Plus Plus  defines only the format and semantics of the WINDOW_UPDATE
+7. HTTP/2 Plus Plus defines only the format and semantics of the WINDOW_UPDATE
    frame ({{window-update}}). This document does not stipulate how a receiver
    decides when to send this frame or the value that it sends, nor does it
    specify how a sender chooses to send packets. Implementations are able to
@@ -907,16 +930,16 @@ their strategy to manage window sizes.
 
 In a multiplexed protocol like HTTP/2 Plus Plus, prioritizing allocation of
 bandwidth and computation resources to streams can be critical to attaining good
-performance. A poor prioritization scheme can result in HTTP/2 providing poor
-performance. With no parallelism at the TCP layer, performance could be
-significantly worse than HTTP/1.1.
+performance. A poor prioritization scheme can result in HTTP/2 Plus Plus
+providing poor performance. With no parallelism at the TCP layer, performance
+could be significantly worse than HTTP/1.1.
 
 It is RECOMMENDED that endpoints use the Extensible Priorities scheme
 {{!PRIORITIES=RFC9218}}.
 
 ## Error Handling
 
-HTTP/2 framing permits two classes of errors:
+HTTP/2 Plus Plus framing permits two classes of errors:
 
  * An error condition that renders the entire connection unusable is a
    connection error.
@@ -1055,14 +1078,14 @@ INADEQUATE_SECURITY (0x0c):
     requirements (see {{use-of-tls-features}}).
 
 HTTP_1_1_REQUIRED (0x0d):
-  : The endpoint requires that HTTP/1.1 be used instead of HTTP/2.
+  : The endpoint requires that HTTP/1.1 be used instead of HTTP/2 Plus Plus.
 
 Unknown or unsupported error codes MUST NOT trigger any special behavior. These
 MAY be treated by an implementation as being equivalent to INTERNAL_ERROR.
 
 # Expressing HTTP Semantics in HTTP/2 Plus Plus
 
-HTTP/2 is an instantiation of the HTTP message abstraction ({{Section 6 of
+HTTP/2 Plus Plus is an instantiation of the HTTP message abstraction ({{Section 6 of
 RFC9110}}).
 
 ## HTTP Message Framing
@@ -1089,9 +1112,9 @@ carries an informational status code is malformed ({{malformed-messages}}).
 The last frame in the sequence ends the stream using either a DATA frame of type
 0x01 or a HEADERS frame of type 0x03.
 
-HTTP/2 uses DATA frames to carry message content. The chunked transfer encoding
-defined in {{Section 7.1 of RFC9110}} cannot be used in HTTP/2 Plus Plus; see
-{{connection-specific-header-fields}}.
+HTTP/2 Plus Plus uses DATA frames to carry message content. The chunked transfer
+encoding defined in {{Section 7.1 of RFC9110}} cannot be used in HTTP/2 Plus
+Plus; see {{connection-specific-header-fields}}.
 
 Trailer fields are carried a HEADERS frame of type 0x03. Trailers MUST NOT
 include pseudo-header fields ({{http-control-data}}). An endpoint that receives
@@ -1170,10 +1193,10 @@ message.
 ### Field Validity
 
 The definitions of field names and values in HTTP prohibit some characters that
-HPACK might be able to convey. HTTP/2 implementations SHOULD validate field
-names and values according to their definitions in {{Sections 5.1 and 5.5 of
-RFC9110}}, respectively, and treat messages that contain prohibited characters
-as malformed ({{malformed-messages}}).
+HPACK might be able to convey. HTTP/2 Plus Plus implementations SHOULD validate
+field names and values according to their definitions in {{Sections 5.1 and 5.5
+of RFC9110}}, respectively, and treat messages that contain prohibited
+characters as malformed ({{malformed-messages}}).
 
 Failure to validate fields can be exploited for request smuggling attacks. In
 particular, unvalidated fields might enable attacks when messages are forwarded
@@ -1223,13 +1246,14 @@ HTTP/2 Plus Plus request; when it is, it MUST NOT contain any value other than
 
 An intermediary transforming an HTTP/1.x message to HTTP/2 Plus Plus MUST remove
 connection-specific header fields as discussed in {{Section 7.6.1 of RFC9110}},
-or their messages will be treated by other HTTP/2 endpoints as malformed
-({{malformed-messages}}).
+or their messages will be treated by other HTTP/2 Plus Plus endpoints as
+malformed ({{malformed-messages}}).
 
 ## HTTP Control Data
 
-HTTP/2 uses special pseudo-header fields beginning with a ':' character (ASCII
-0x3a) to convey message control data (see {{Section 6.2 of RFC9110}}).
+HTTP/2 Plus Plus uses special pseudo-header fields beginning with a ':'
+character (ASCII 0x3a) to convey message control data (see {{Section 6.2 of
+RFC9110}}).
 
 Pseudo-header fields are not HTTP header fields. Endpoints MUST NOT generate
 pseudo-header fields other than those defined in this document. Note that an
@@ -1278,9 +1302,9 @@ interact with non-HTTP services.
 ({{Section 7.1 of RFC9110}}). The recipient of a request MUST NOT use the Host
 header field to determine the target URI if ":authority" is present.
 
-: Clients that generate HTTP/2 requests directly MUST use the ":authority"
-pseudo-header field to convey authority information, unless there is no
-authority information to convey (in which case it MUST NOT generate
+: Clients that generate HTTP/2 Plus Plus requests directly MUST use the
+":authority" pseudo-header field to convey authority information, unless there
+is no authority information to convey (in which case it MUST NOT generate
 ":authority").
 
 : Clients MUST NOT generate a request with a Host header field that differs from
@@ -1305,8 +1329,8 @@ necessary to construct an HTTP/1.1 request) MUST use the value from the
 intermediary also changes the request target. This replaces any existing Host
 field to avoid potential vulnerabilities in HTTP routing.
 
-: An intermediary that forwards a request over HTTP/2 MAY retain any Host header
-field.
+: An intermediary that forwards a request over HTTP/2 Plus Plus MAY retain any
+Host header field.
 
 : Note that request targets for CONNECT or asterisk-form OPTIONS requests never
 include authority information; see {{Sections 7.1 and 7.2 of RFC9110}}.
@@ -1336,10 +1360,10 @@ field is omitted.
 
 : NEW MTI! See {{!RFC8446}}
 
-All HTTP/2 requests MUST include exactly one valid value for the ":method",
-":scheme", and ":path" pseudo-header fields, unless they are CONNECT requests
-({{the-connect-method}}). An HTTP request that omits mandatory pseudo-header
-fields is malformed ({{malformed-messages}}).
+All HTTP/2 Plus Plus requests MUST include exactly one valid value for the
+":method", ":scheme", and ":path" pseudo-header fields, unless they are CONNECT
+requests ({{the-connect-method}}) - TODO explain :protocol. An HTTP request that
+omits mandatory pseudo-header fields is malformed ({{malformed-messages}}).
 
 Individual requests do not carry an explicit indicator of protocol version. All
 HTTP/2 Plus Plus requests implicitly have a protocol version of "2.lol" (see
@@ -1347,12 +1371,12 @@ HTTP/2 Plus Plus requests implicitly have a protocol version of "2.lol" (see
 
 ### Response Pseudo-Header Fields
 
-For HTTP/2 responses, a single ":status" pseudo-header field is defined that
-carries the HTTP status code field (see {{Section 15 of RFC9110}}). This
-pseudo-header field MUST be included in all responses, including interim
+For HTTP/2 Plus Plus responses, a single ":status" pseudo-header field is
+defined that carries the HTTP status code field (see {{Section 15 of RFC9110}}).
+This pseudo-header field MUST be included in all responses, including interim
 responses; otherwise, the response is malformed ({{malformed-messages}}).
 
-HTTP/2 responses implicitly have a protocol version of "2.lol".
+HTTP/2 Plus Plus responses implicitly have a protocol version of "2.lol".
 
 ## The CONNECT Method
 
@@ -1464,9 +1488,9 @@ A server that does not wish clients to reuse connections can indicate that it is
 not authoritative for a request by sending a 421 (Misdirected Request) status
 code in response to the request (see {{Section 15.5.20 of RFC9110}}).
 
-A client that is configured to use a proxy over HTTP/2 directs requests to that
-proxy through a single connection. That is, all requests sent via a proxy reuse
-the connection to the proxy.
+A client that is configured to use a proxy over HTTP/2 Plus Plus directs
+requests to that proxy through a single connection. That is, all requests sent
+via a proxy reuse the connection to the proxy.
 
 ## Use of TLS Features
 
