@@ -15,7 +15,7 @@ Abstract
 
    This document defines HTTP/2 Plus Plus, an HTTP mapping to TCP that
    is inspired by HTTP/2.  It shares many concepts but has a slightly
-   different feature set.  Difference make the wire image incompatible
+   different feature set.  Differences make the wire image incompatible
    but translation to HTTP/2 is possible.
 
 About This Document
@@ -151,9 +151,9 @@ Table of Contents
    HTTP/2 HTTP/2 Plus Plus supports all of the core features of HTTP but
    aims to be more efficient than HTTP/1.1.
 
-   HTTP/2 HTTP/2 Plus Plus is a connection-oriented application-layer
-   protocol that runs over a TCP connection ([TCP]).  The client is the
-   TCP connection initiator.
+   HTTP/2 Plus Plus is a connection-oriented application-layer protocol
+   that runs over a TCP connection ([TCP]).  The client is the TCP
+   connection initiator.
 
    The basic protocol unit in HTTP/2 Plus Plus is a frame (section x.x).
    Each frame type serves a different purpose.  For example, HEADERS and
@@ -195,17 +195,17 @@ Table of Contents
 
    The following terms are used:
 
-   client:  The endpoint that initiates an HTTP/2 connection.  Clients
-      send HTTP requests and receive HTTP responses.
+   client:  The endpoint that initiates an HTTP/2 Plus Plus connection.
+      Clients send HTTP requests and receive HTTP responses.
 
    connection:  A transport-layer connection between two endpoints.
 
-   connection error:  An error that affects the entire HTTP/2
+   connection error:  An error that affects the entire HTTP/2 Plus Plus
       connection.
 
    endpoint:  Either the client or server of the connection.
 
-   frame:  The smallest unit of communication within an HTTP/2
+   frame:  The smallest unit of communication within an HTTP/2 Plus Plus
       connection, consisting of a header and a variable-length sequence
       of bytes structured according to the frame type.
 
@@ -217,12 +217,13 @@ Table of Contents
 
    sender:  An endpoint that is transmitting frames.
 
-   server:  The endpoint that accepts an HTTP/2 connection.  Servers
-      receive HTTP requests and send HTTP responses.
+   server:  The endpoint that accepts an HTTP/2 Plus Plus connection.
+      Servers receive HTTP requests and send HTTP responses.
 
-   stream:  A bidirectional flow of frames within the HTTP/2 connection.
+   stream:  A bidirectional flow of frames within the HTTP/2 Plus Plus
+      connection.
 
-   stream error:  An error on the individual HTTP/2 stream.
+   stream error:  An error on the individual HTTP/2 Plus Plus stream.
 
    Finally, the terms "gateway", "intermediary", "proxy", and "tunnel"
    are defined in Section 3.7 of [HTTP].  Intermediaries act as both
@@ -234,7 +235,7 @@ Table of Contents
 3.  Starting HTTP/2 Plus Plus
 
    Implementations that generate HTTP requests need to discover whether
-   a server supports HTTP/2.
+   a server supports HTTP/2 Plus Plus.
 
    HTTP/2 Plus Plus uses only the "https" URI scheme defined in
    Section 4.2 of [HTTP], with the same default port numbers as HTTP/1.1
@@ -596,14 +597,15 @@ Table of Contents
    A client that is unable to retry requests loses all requests that are
    in flight when the server closes the connection.  This is especially
    true for intermediaries that might not be serving clients using
-   HTTP/2.  A server that is attempting to gracefully shut down a
-   connection SHOULD send an initial GOAWAY frame with the last stream
-   identifier set to $BIG_NUMBER and a NO_ERROR code.  This signals to
-   the client that a shutdown is imminent and that initiating further
-   requests is prohibited.  After allowing time for any in-flight stream
-   creation (at least one round-trip time), the server MAY send another
-   GOAWAY frame with an updated last stream identifier.  This ensures
-   that a connection can be cleanly shut down without losing requests.
+   HTTP/2 Plus Plus.  A server that is attempting to gracefully shut
+   down a connection SHOULD send an initial GOAWAY frame with the last
+   stream identifier set to $BIG_NUMBER and a NO_ERROR code.  This
+   signals to the client that a shutdown is imminent and that initiating
+   further requests is prohibited.  After allowing time for any in-
+   flight stream creation (at least one round-trip time), the server MAY
+   send another GOAWAY frame with an updated last stream identifier.
+   This ensures that a connection can be cleanly shut down without
+   losing requests.
 
    After sending a GOAWAY frame, the sender can discard frames for
    streams initiated by the receiver with identifiers higher than the
@@ -725,9 +727,9 @@ Table of Contents
    exchanged between the client and server within an HTTP/2 Plus Plus
    connection.  Streams have several important characteristics:
 
-   *  A single HTTP/2 connection can contain multiple concurrently open
-      streams, with either endpoint interleaving frames from multiple
-      streams.
+   *  A single HTTP/2 Plus Plus connection can contain multiple
+      concurrently open streams, with either endpoint interleaving
+      frames from multiple streams.
 
    *  Streams can be established and used unilaterally or shared by
       either endpoint.
@@ -963,9 +965,9 @@ Table of Contents
    control algorithms to be used without requiring protocol changes.
    Flow control has the following characteristics:
 
-   1.  Flow control is specific to a connection.  HTTP/2 flow control
-       operates between the endpoints of a single hop and not over the
-       entire end-to-end path.
+   1.  Flow control is specific to a connection.  HTTP/2 Plus Plus flow
+       control operates between the endpoints of a single hop and not
+       over the entire end-to-end path.
 
    2.  Flow control is based on WINDOW_UPDATE frames.  Receivers
        advertise how many bytes they are prepared to receive on a stream
@@ -1054,16 +1056,16 @@ Table of Contents
    In a multiplexed protocol like HTTP/2 Plus Plus, prioritizing
    allocation of bandwidth and computation resources to streams can be
    critical to attaining good performance.  A poor prioritization scheme
-   can result in HTTP/2 providing poor performance.  With no parallelism
-   at the TCP layer, performance could be significantly worse than
-   HTTP/1.1.
+   can result in HTTP/2 Plus Plus providing poor performance.  With no
+   parallelism at the TCP layer, performance could be significantly
+   worse than HTTP/1.1.
 
    It is RECOMMENDED that endpoints use the Extensible Priorities scheme
    [PRIORITIES].
 
 5.4.  Error Handling
 
-   HTTP/2 framing permits two classes of errors:
+   HTTP/2 Plus Plus framing permits two classes of errors:
 
    *  An error condition that renders the entire connection unusable is
       a connection error.
@@ -1203,7 +1205,7 @@ Table of Contents
       that do not meet minimum security requirements (see Section 8.2).
 
    HTTP_1_1_REQUIRED (0x0d):  The endpoint requires that HTTP/1.1 be
-      used instead of HTTP/2.
+      used instead of HTTP/2 Plus Plus.
 
    Unknown or unsupported error codes MUST NOT trigger any special
    behavior.  These MAY be treated by an implementation as being
@@ -1211,8 +1213,8 @@ Table of Contents
 
 7.  Expressing HTTP Semantics in HTTP/2 Plus Plus
 
-   HTTP/2 is an instantiation of the HTTP message abstraction (Section 6
-   of [HTTP]).
+   HTTP/2 Plus Plus is an instantiation of the HTTP message abstraction
+   (Section 6 of [HTTP]).
 
 7.1.  HTTP Message Framing
 
@@ -1241,9 +1243,9 @@ Table of Contents
    The last frame in the sequence ends the stream using either a DATA
    frame of type 0x01 or a HEADERS frame of type 0x03.
 
-   HTTP/2 uses DATA frames to carry message content.  The chunked
-   transfer encoding defined in Section 7.1 of [HTTP] cannot be used in
-   HTTP/2 Plus Plus; see Section 7.2.2.
+   HTTP/2 Plus Plus uses DATA frames to carry message content.  The
+   chunked transfer encoding defined in Section 7.1 of [HTTP] cannot be
+   used in HTTP/2 Plus Plus; see Section 7.2.2.
 
    Trailer fields are carried a HEADERS frame of type 0x03.  Trailers
    MUST NOT include pseudo-header fields (Section 7.3).  An endpoint
@@ -1330,7 +1332,7 @@ Table of Contents
 7.2.1.  Field Validity
 
    The definitions of field names and values in HTTP prohibit some
-   characters that HPACK might be able to convey.  HTTP/2
+   characters that HPACK might be able to convey.  HTTP/2 Plus Plus
    implementations SHOULD validate field names and values according to
    their definitions in Sections 5.1 and 5.5 of [HTTP], respectively,
    and treat messages that contain prohibited characters as malformed
@@ -1390,12 +1392,12 @@ Table of Contents
    An intermediary transforming an HTTP/1.x message to HTTP/2 Plus Plus
    MUST remove connection-specific header fields as discussed in
    Section 7.6.1 of [HTTP], or their messages will be treated by other
-   HTTP/2 endpoints as malformed (Section 7.1.1).
+   HTTP/2 Plus Plus endpoints as malformed (Section 7.1.1).
 
 7.3.  HTTP Control Data
 
-   HTTP/2 uses special pseudo-header fields beginning with a ':'
-   character (ASCII 0x3a) to convey message control data (see
+   HTTP/2 Plus Plus uses special pseudo-header fields beginning with a
+   ':' character (ASCII 0x3a) to convey message control data (see
    Section 6.2 of [HTTP]).
 
    Pseudo-header fields are not HTTP header fields.  Endpoints MUST NOT
@@ -1443,10 +1445,10 @@ Table of Contents
       recipient of a request MUST NOT use the Host header field to
       determine the target URI if ":authority" is present.
 
-      Clients that generate HTTP/2 requests directly MUST use the
-      ":authority" pseudo-header field to convey authority information,
-      unless there is no authority information to convey (in which case
-      it MUST NOT generate ":authority").
+      Clients that generate HTTP/2 Plus Plus requests directly MUST use
+      the ":authority" pseudo-header field to convey authority
+      information, unless there is no authority information to convey
+      (in which case it MUST NOT generate ":authority").
 
       Clients MUST NOT generate a request with a Host header field that
       differs from the ":authority" pseudo-header field.  A server
@@ -1473,8 +1475,8 @@ Table of Contents
       target.  This replaces any existing Host field to avoid potential
       vulnerabilities in HTTP routing.
 
-      An intermediary that forwards a request over HTTP/2 MAY retain any
-      Host header field.
+      An intermediary that forwards a request over HTTP/2 Plus Plus MAY
+      retain any Host header field.
 
       Note that request targets for CONNECT or asterisk-form OPTIONS
       requests never include authority information; see Sections 7.1 and
@@ -1504,10 +1506,11 @@ Table of Contents
 
    ":protocol":  NEW MTI!  See [RFC8446]
 
-   All HTTP/2 requests MUST include exactly one valid value for the
-   ":method", ":scheme", and ":path" pseudo-header fields, unless they
-   are CONNECT requests (Section 7.4).  An HTTP request that omits
-   mandatory pseudo-header fields is malformed (Section 7.1.1).
+   All HTTP/2 Plus Plus requests MUST include exactly one valid value
+   for the ":method", ":scheme", and ":path" pseudo-header fields,
+   unless they are CONNECT requests (Section 7.4) - TODO explain
+   :protocol.  An HTTP request that omits mandatory pseudo-header fields
+   is malformed (Section 7.1.1).
 
    Individual requests do not carry an explicit indicator of protocol
    version.  All HTTP/2 Plus Plus requests implicitly have a protocol
@@ -1515,13 +1518,14 @@ Table of Contents
 
 7.3.2.  Response Pseudo-Header Fields
 
-   For HTTP/2 responses, a single ":status" pseudo-header field is
-   defined that carries the HTTP status code field (see Section 15 of
-   [HTTP]).  This pseudo-header field MUST be included in all responses,
-   including interim responses; otherwise, the response is malformed
-   (Section 7.1.1).
+   For HTTP/2 Plus Plus responses, a single ":status" pseudo-header
+   field is defined that carries the HTTP status code field (see
+   Section 15 of [HTTP]).  This pseudo-header field MUST be included in
+   all responses, including interim responses; otherwise, the response
+   is malformed (Section 7.1.1).
 
-   HTTP/2 responses implicitly have a protocol version of "2.lol".
+   HTTP/2 Plus Plus responses implicitly have a protocol version of
+   "2.lol".
 
 7.4.  The CONNECT Method
 
@@ -1642,9 +1646,9 @@ Table of Contents
    (Misdirected Request) status code in response to the request (see
    Section 15.5.20 of [HTTP]).
 
-   A client that is configured to use a proxy over HTTP/2 directs
-   requests to that proxy through a single connection.  That is, all
-   requests sent via a proxy reuse the connection to the proxy.
+   A client that is configured to use a proxy over HTTP/2 Plus Plus
+   directs requests to that proxy through a single connection.  That is,
+   all requests sent via a proxy reuse the connection to the proxy.
 
 8.2.  Use of TLS Features
 
