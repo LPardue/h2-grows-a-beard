@@ -7,7 +7,10 @@
 <title>HTTP/2 Plus Plus</title>
 <meta content="Lucas Pardue" name="author">
 <meta content="
-       TODO Abstract 
+       This document defines HTTP/2 Plus Plus, an HTTP mapping to TCP that is inspired
+by HTTP/2. It shares many concepts but has a slightly different feature set.
+Difference make the wire image incompatible but translation to HTTP/2 is
+possible. 
     " name="description">
 <meta content="xml2rfc 3.18.2" name="generator">
 <meta content="next generation" name="keyword">
@@ -1031,7 +1034,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pardue</td>
-<td class="center">Expires 17 May 2024</td>
+<td class="center">Expires 18 May 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1044,12 +1047,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-pardue-httpbis-h2-plus-plus-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-14" class="published">14 November 2023</time>
+<time datetime="2023-11-15" class="published">15 November 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-17">17 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-05-18">18 May 2024</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1062,7 +1065,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">HTTP/2 Plus Plus</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">TODO Abstract<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document defines HTTP/2 Plus Plus, an HTTP mapping to TCP that is inspired
+by HTTP/2. It shares many concepts but has a slightly different feature set.
+Difference make the wire image incompatible but translation to HTTP/2 is
+possible.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1098,7 +1104,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1131,22 +1137,200 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-http-2-plus-plus-protocol-o" class="internal xref">HTTP/2 Plus Plus Protocol Overview</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-conventions-and-terminology" class="internal xref">Conventions and Terminology</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-starting-http-2-plus-plus" class="internal xref">Starting HTTP/2 Plus Plus</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-http-2-plus-plus-frames" class="internal xref">HTTP/2 Plus Plus frames</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-frame-layout" class="internal xref">Frame Layout</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-frame-definitions" class="internal xref">Frame Definitions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.1">
+                    <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-data" class="internal xref">DATA</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-headers" class="internal xref">HEADERS</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.3">
+                    <p id="section-toc.1-1.4.2.2.2.3.1"><a href="#section-4.2.3" class="auto internal xref">4.2.3</a>.  <a href="#name-reset_stream" class="internal xref">RESET_STREAM</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.4">
+                    <p id="section-toc.1-1.4.2.2.2.4.1"><a href="#section-4.2.4" class="auto internal xref">4.2.4</a>.  <a href="#name-settings" class="internal xref">SETTINGS</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.5">
+                    <p id="section-toc.1-1.4.2.2.2.5.1"><a href="#section-4.2.5" class="auto internal xref">4.2.5</a>.  <a href="#name-ping" class="internal xref">PING</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.6">
+                    <p id="section-toc.1-1.4.2.2.2.6.1"><a href="#section-4.2.6" class="auto internal xref">4.2.6</a>.  <a href="#name-goaway" class="internal xref">GOAWAY</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.7">
+                    <p id="section-toc.1-1.4.2.2.2.7.1"><a href="#section-4.2.7" class="auto internal xref">4.2.7</a>.  <a href="#name-window_update" class="internal xref">WINDOW_UPDATE</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.8">
+                    <p id="section-toc.1-1.4.2.2.2.8.1"><a href="#section-4.2.8" class="auto internal xref">4.2.8</a>.  <a href="#name-padding" class="internal xref">PADDING</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.9">
+                    <p id="section-toc.1-1.4.2.2.2.9.1"><a href="#section-4.2.9" class="auto internal xref">4.2.9</a>.  <a href="#name-max_streams" class="internal xref">MAX_STREAMS</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-field-compression" class="internal xref">Field Compression</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-header-size-constraints" class="internal xref">Header Size Constraints</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.5">
+                <p id="section-toc.1-1.4.2.5.1"><a href="#section-4.5" class="auto internal xref">4.5</a>.  <a href="#name-compression-state" class="internal xref">Compression State</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-streams-and-multiplexing" class="internal xref">Streams and Multiplexing</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-stream-states" class="internal xref">Stream States</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-stream-identifiers" class="internal xref">Stream Identifiers</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-stream-concurrency" class="internal xref">Stream Concurrency</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-flow-control" class="internal xref">Flow Control</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
+                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-flow-control-principles" class="internal xref">Flow-Control Principles</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.2">
+                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="auto internal xref">5.2.2</a>.  <a href="#name-appropriate-use-of-flow-con" class="internal xref">Appropriate Use of Flow Control</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.3">
+                    <p id="section-toc.1-1.5.2.2.2.3.1"><a href="#section-5.2.3" class="auto internal xref">5.2.3</a>.  <a href="#name-flow-control-performance" class="internal xref">Flow-Control Performance</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-prioritization" class="internal xref">Prioritization</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-error-handling" class="internal xref">Error Handling</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4.2.1">
+                    <p id="section-toc.1-1.5.2.4.2.1.1"><a href="#section-5.4.1" class="auto internal xref">5.4.1</a>.  <a href="#name-connection-error-handling" class="internal xref">Connection Error Handling</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4.2.2">
+                    <p id="section-toc.1-1.5.2.4.2.2.1"><a href="#section-5.4.2" class="auto internal xref">5.4.2</a>.  <a href="#name-stream-error-handling" class="internal xref">Stream Error Handling</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4.2.3">
+                    <p id="section-toc.1-1.5.2.4.2.3.1"><a href="#section-5.4.3" class="auto internal xref">5.4.3</a>.  <a href="#name-connection-termination" class="internal xref">Connection Termination</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-extending-http-2-plus-plus" class="internal xref">Extending HTTP/2 Plus Plus</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-error-codes" class="internal xref">Error Codes</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-expressing-http-semantics-i" class="internal xref">Expressing HTTP Semantics in HTTP/2 Plus Plus</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-http-message-framing" class="internal xref">HTTP Message Framing</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1.2.1">
+                    <p id="section-toc.1-1.7.2.1.2.1.1"><a href="#section-7.1.1" class="auto internal xref">7.1.1</a>.  <a href="#name-malformed-messages" class="internal xref">Malformed Messages</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-http-fields" class="internal xref">HTTP Fields</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.1">
+                    <p id="section-toc.1-1.7.2.2.2.1.1"><a href="#section-7.2.1" class="auto internal xref">7.2.1</a>.  <a href="#name-field-validity" class="internal xref">Field Validity</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2.2.2">
+                    <p id="section-toc.1-1.7.2.2.2.2.1"><a href="#section-7.2.2" class="auto internal xref">7.2.2</a>.  <a href="#name-connection-specific-header-" class="internal xref">Connection-Specific Header Fields</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-http-control-data" class="internal xref">HTTP Control Data</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3.2.1">
+                    <p id="section-toc.1-1.7.2.3.2.1.1"><a href="#section-7.3.1" class="auto internal xref">7.3.1</a>.  <a href="#name-request-pseudo-header-field" class="internal xref">Request Pseudo-Header Fields</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3.2.2">
+                    <p id="section-toc.1-1.7.2.3.2.2.1"><a href="#section-7.3.2" class="auto internal xref">7.3.2</a>.  <a href="#name-response-pseudo-header-fiel" class="internal xref">Response Pseudo-Header Fields</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-the-connect-method" class="internal xref">The CONNECT Method</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-the-upgrade-header-field" class="internal xref">The Upgrade Header Field</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.6">
+                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="auto internal xref">7.6</a>.  <a href="#name-request-reliability" class="internal xref">Request Reliability</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-http-2-plus-plus-connection" class="internal xref">HTTP/2 Plus Plus Connections</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-connection-management" class="internal xref">Connection Management</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-connection-reuse" class="internal xref">Connection Reuse</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-use-of-tls-features" class="internal xref">Use of TLS Features</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1157,59 +1341,1921 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">TODO Introduction<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">HTTP/2 <span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span> is an optimzed expression of the semantics of HTTP <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span> for TCP <span>[<a href="#TCP" class="cite xref">TCP</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">Several features defined in HTTP/2 have not been widely deployed. The second
+revision of <span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span> deprecated these features in a way that would avoid
+interoperabilty issues. However, some of the complexity for dealing with this,
+especially the possibility of speaking with a peer that tries to use deprecated
+features, is pushed to implementations. Furthermore, HTTP/2 extensions that
+replace features (whether deprecated or not) require careful writing to cover
+all scenarios of usage.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">HTTP/2 Plus Plus takes the best bits of HTTP/2 and addresses issues that are
+hard to fix in a backwards-compitible and easily-deployable way. It is not wire
+compatible with HTTP/2 and so uses a different APLN ID. However, the concepts
+shared between HTTP/2 and HTTP/2 Plus Plus mean that it is possible to translate
+between versions.<a href="#section-1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="conventions-and-definitions">
+<div id="http2-plus-plus-protocol-overview">
 <section id="section-2">
-      <h2 id="name-conventions-and-definitions">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      <h2 id="name-http-2-plus-plus-protocol-o">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-http-2-plus-plus-protocol-o" class="section-name selfRef">HTTP/2 Plus Plus Protocol Overview</a>
       </h2>
-<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+<p id="section-2-1">HTTP/2 Plus Plus provides an optimized transport for HTTP semantics. HTTP/2
+HTTP/2 Plus Plus supports all of the core features of HTTP but aims to be more
+efficient than HTTP/1.1.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">HTTP/2 HTTP/2 Plus Plus is a connection-oriented application-layer protocol that
+runs over a TCP connection (<span>[<a href="#TCP" class="cite xref">TCP</a>]</span>). The client is the TCP connection
+initiator.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">The basic protocol unit in HTTP/2 Plus Plus is a frame (section x.x). Each frame
+type serves a different purpose. For example, HEADERS and DATA frames form the
+basis of HTTP requests and responses (<a href="#field-validity" class="auto internal xref">Section 7.2.1</a>); other frame types
+like SETTINGS and WINDOW_UPDATE are used in support of other HTTP/2 Plus Plus
+features.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Multiplexing of requests is achieved by having each HTTP request/response
+exchange associated with its own stream (<a href="#streams-and-multiplexing" class="auto internal xref">Section 5</a>). Streams
+are largely independent of each other, so a blocked or stalled request or
+response does not prevent progress on other streams.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Effective use of multiplexing depends on flow control and prioritization. Flow
+control (<a href="#flow-control" class="auto internal xref">Section 5.2</a>) ensures that it is possible to efficiently use
+multiplexed streams by restricting data that is transmitted to what the receiver
+is able to handle. Prioritization (<a href="#prioritization" class="auto internal xref">Section 5.3</a>) ensures that limited
+resources are used most effectively.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">Because HTTP fields used in a connection can contain large amounts of redundant
+data, frames that contain them are compressed (<a href="#field-compression" class="auto internal xref">Section 4.3</a>). This has
+especially advantageous impact upon request sizes in the common case, allowing
+many requests to be compressed into one packet.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<div id="conventions-and-terminology">
+<section id="section-2.1">
+        <h3 id="name-conventions-and-terminology">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-conventions-and-terminology" class="section-name selfRef">Conventions and Terminology</a>
+        </h3>
+<p id="section-2.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
-appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+appear in all capitals, as shown here.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">This specification describes binary formats using the conventions described in
+Section 1.3 of RFC 9000 <span>[<a href="#QUIC" class="cite xref">QUIC</a>]</span>. Note that this format uses network
+byte order and that high-valued bits are listed before low-valued bits.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-3">The following terms are used:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.1-4">
+          <dt id="section-2.1-4.1">client:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.2">
+            <p id="section-2.1-4.2.1">The endpoint that initiates an HTTP/2 connection. Clients send HTTP requests and receive HTTP responses.<a href="#section-2.1-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.3">connection:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.4">
+            <p id="section-2.1-4.4.1">A transport-layer connection between two endpoints.<a href="#section-2.1-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.5">connection error:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.6">
+            <p id="section-2.1-4.6.1">An error that affects the entire HTTP/2 connection.<a href="#section-2.1-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.7">endpoint:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.8">
+            <p id="section-2.1-4.8.1">Either the client or server of the connection.<a href="#section-2.1-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.9">frame:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.10">
+            <p id="section-2.1-4.10.1">The smallest unit of communication within an HTTP/2 connection, consisting of a
+header and a variable-length sequence of bytes structured according to the frame
+type.<a href="#section-2.1-4.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.11">peer:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.12">
+            <p id="section-2.1-4.12.1">An endpoint. When discussing a particular endpoint, "peer" refers to the
+endpoint that is remote to the primary subject of discussion.<a href="#section-2.1-4.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.13">receiver:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.14">
+            <p id="section-2.1-4.14.1">An endpoint that is receiving frames.<a href="#section-2.1-4.14.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.15">sender:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.16">
+            <p id="section-2.1-4.16.1">An endpoint that is transmitting frames.<a href="#section-2.1-4.16.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.17">server:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.18">
+            <p id="section-2.1-4.18.1">The endpoint that accepts an HTTP/2 connection. Servers receive HTTP requests
+and send HTTP responses.<a href="#section-2.1-4.18.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.19">stream:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.20">
+            <p id="section-2.1-4.20.1">A bidirectional flow of frames within the HTTP/2 connection.<a href="#section-2.1-4.20.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-4.21">stream error:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.22">
+            <p id="section-2.1-4.22.1">An error on the individual HTTP/2 stream.<a href="#section-2.1-4.22.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-2.1-5">Finally, the terms "gateway", "intermediary", "proxy", and "tunnel" are defined
+in Section 3.7 of <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>. Intermediaries act as both client and server at
+different times.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6">The term "content" as it applies to message bodies is defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="starting-http2-plus-plus">
+<section id="section-3">
+      <h2 id="name-starting-http-2-plus-plus">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-starting-http-2-plus-plus" class="section-name selfRef">Starting HTTP/2 Plus Plus</a>
+      </h2>
+<p id="section-3-1">Implementations that generate HTTP requests need to discover whether a server
+supports HTTP/2.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">HTTP/2 Plus Plus uses only the "https" URI scheme defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>, with the same default port numbers as HTTP/1.1 <span>[<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span>. The URI
+does not include any indication about what HTTP versions an upstream server (the
+immediate peer to which the client wishes to establish a connection) supports.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">A client that makes a request uses TLS <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> with the ALPN extension
+<span>[<a href="#TLS-ALPN" class="cite xref">TLS-ALPN</a>]</span>.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">HTTP/2 Plus Plus uses the "h2-TBD" (octect sequence TBD) protocol identifier.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">Once TLS negotiation is complete, both the client and the server <span class="bcp14">MUST</span> send a
+SETTINGS frame as their initial frame.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">To avoid unnecessary latency, clients are permitted to send additional frames to
+the server immediately after sending their SETTINGS frame, without waiting to
+receive the server SETTINGS frame. It is important to note, however, that the
+server SETTINGS frame might include settings that necessarily alter how a client
+is expected to communicate with the server. Upon receiving the SETTINGS frame,
+the client is expected to honor any settings established. In some
+configurations, it is possible for the server to transmit SETTINGS before the
+client sends additional frames, providing an opportunity to avoid this issue.<a href="#section-3-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="http2-plus-plus-frames">
+<section id="section-4">
+      <h2 id="name-http-2-plus-plus-frames">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-http-2-plus-plus-frames" class="section-name selfRef">HTTP/2 Plus Plus frames</a>
+      </h2>
+<p id="section-4-1">Once the HTTP/2 Plus Plus connection is established, endpoints can begin
+exchanging frames.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="frame-layout">
+<section id="section-4.1">
+        <h3 id="name-frame-layout">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-frame-layout" class="section-name selfRef">Frame Layout</a>
+        </h3>
+<p id="section-4.1-1">All frames have the following format:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<span id="name-http-2-plus-plus-frame-form"></span><div id="h2-pp-frame-format">
+<figure id="figure-1">
+          <div class="alignLeft art-text artwork" id="section-4.1-2.1">
+<pre>
+HTTP/2 Plus Plus Frame Format {
+  Type (i),
+  Length (i),
+  Stream Identifier (i),
+  Frame Payload (..),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-http-2-plus-plus-frame-form" class="selfRef">HTTP/2 Plus Plus Frame Format</a>
+          </figcaption></figure>
+</div>
+<p id="section-4.1-3">A frame includes the following fields:<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-4.1-4">
+          <dt id="section-4.1-4.1">Type:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.1-4.2">
+            <p id="section-4.1-4.2.1">A variable-length integer that identifies the frame type.<a href="#section-4.1-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.1-4.3">Length:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.1-4.4">
+            <p id="section-4.1-4.4.1">A variable-length integer that describes the length in bytes of
+the Frame Payload.<a href="#section-4.1-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.1-4.5">Stream Identifier:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.1-4.6">
+            <p id="section-4.1-4.6.1">A variable-length integer that identifies the stream to which the frame
+applies. The value 0x00 is reserved for frames that are associated with
+the connection as a whole.<a href="#section-4.1-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-4.1-4.7">Frame Payload:</dt>
+          <dd style="margin-left: 1.5em" id="section-4.1-4.8">
+            <p id="section-4.1-4.8.1">A payload, the semantics of which are determined by the Type field.<a href="#section-4.1-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-4.1-5">Sending large frames can result in delays in sending time-sensitive frames (such
+as RESET_STREAM or WINDOW_UPDATE), which, if blocked by the transmission of a
+large frame, could affect performance.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="frame-definitions">
+<section id="section-4.2">
+        <h3 id="name-frame-definitions">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-frame-definitions" class="section-name selfRef">Frame Definitions</a>
+        </h3>
+<div id="data">
+<section id="section-4.2.1">
+          <h4 id="name-data">
+<a href="#section-4.2.1" class="section-number selfRef">4.2.1. </a><a href="#name-data" class="section-name selfRef">DATA</a>
+          </h4>
+<p id="section-4.2.1-1">DATA frames (type=0x00 or 0x01) convey arbitrary, variable-length sequences of
+bytes associated with HTTP request or response content.<a href="#section-4.2.1-1" class="pilcrow">¶</a></p>
+<span id="name-data-frame"></span><figure id="figure-2">
+            <div class="alignLeft art-text artwork" id="section-4.2.1-2.1">
+<pre>
+DATA Frame {
+  Type (i) = 0x00..0x01,
+  Length (i),
+  Stream Identifier (i),
+  Data (..),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-data-frame" class="selfRef">DATA Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.1-3">DATA frames of type 0x01 causes the stream to enter one of the "half-closed"
+states or the "closed" state (<a href="#stream-states" class="auto internal xref">Section 5.1</a>).<a href="#section-4.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-4">DATA frames <span class="bcp14">MUST</span> be associated with a stream. If a DATA frame is received whose
+Stream Identifier field is 0x00, the recipient <span class="bcp14">MUST</span> respond with a connection
+error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-4.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-5">DATA frames are subject to flow control and can only be sent when a stream is in
+the "open" or "half-closed (remote)" state. The entire DATA frame payload is
+included in flow control. If a DATA frame is received whose stream is not in the
+"open" or "half-closed (local)" state, the recipient <span class="bcp14">MUST</span> respond with a stream
+error (<a href="#stream-error-handling" class="auto internal xref">Section 5.4.2</a>) of type STREAM_CLOSED.<a href="#section-4.2.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="headers">
+<section id="section-4.2.2">
+          <h4 id="name-headers">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-headers" class="section-name selfRef">HEADERS</a>
+          </h4>
+<p id="section-4.2.2-1">The HEADERS frame (type=0x02 or 0x03) is used to carry an HTTP field
+section that is encoded using HPACK. Despite the name, a HEADERS frame can carry
+a header section or a trailer section.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<span id="name-headers-frame"></span><figure id="figure-3">
+            <div class="alignLeft art-text artwork" id="section-4.2.2-2.1">
+<pre>
+HEADERS Frame {
+  Type (i) = 0x02..0x03,
+  Length (i),
+  Stream Identifier (i),
+  Encoded Field Section (..),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-headers-frame" class="selfRef">HEADERS Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.2-3">HEADERS frames of type 0x02 open a stream (<a href="#stream-states" class="auto internal xref">Section 5.1</a>).<a href="#section-4.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-4">HEADERS frames of type 0x03 cause the stream to enter one of the "half-closed"
+states or the "closed" state (<a href="#stream-states" class="auto internal xref">Section 5.1</a>).<a href="#section-4.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-5">HEADERS frames can be sent on a stream in the "idle", "open", or "half-closed
+(remote)" state.<a href="#section-4.2.2-5" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-6">HEADERS frames <span class="bcp14">MUST</span> be associated with a stream. If a HEADERS frame is received
+whose Stream Identifier field is 0x00, the recipient <span class="bcp14">MUST</span> respond with a
+connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-4.2.2-6" class="pilcrow">¶</a></p>
+<p id="section-4.2.2-7">The HEADERS frame changes the connection state as described in
+<a href="#field-compression" class="auto internal xref">Section 4.3</a>.<a href="#section-4.2.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="reset-stream">
+<section id="section-4.2.3">
+          <h4 id="name-reset_stream">
+<a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-reset_stream" class="section-name selfRef">RESET_STREAM</a>
+          </h4>
+<p id="section-4.2.3-1">The RESET_STREAM frame (type=0x04) allows for immediate termination of a stream.
+RESET_STREAM is sent to request cancellation of a stream or to indicate that an
+error condition has occurred.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
+<span id="name-reset_stream-frame"></span><figure id="figure-4">
+            <div class="alignLeft art-text artwork" id="section-4.2.3-2.1">
+<pre>
+RESET_STREAM Frame {
+  Type (i) = 0x04,
+  Length (i),
+  Stream Identifier (i),
+  Error Code (i),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-reset_stream-frame" class="selfRef">RESET_STREAM Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.3-3">The RESET_STREAM frame contains a variable-length integer that conveys and error
+code to indicate why the stream is being terminated.<a href="#section-4.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-4">The RESET_STREAM frame fully terminates the referenced stream and causes it to
+enter the "closed" state. After receiving a RESET_STREAM on a stream, the
+receiver <span class="bcp14">MUST NOT</span> send additional frames for that stream. However, after sending
+the RESET_STREAM, the sending endpoint <span class="bcp14">MUST</span> be prepared to receive and process
+additional frames sent on the stream that might have been sent by the peer prior
+to the arrival of the RESET_STREAM.<a href="#section-4.2.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-5">RESET_STREAM frames <span class="bcp14">MUST</span> be associated with a stream. If a RESET_STREAM frame is
+received with a stream identifier of 0x00, the recipient <span class="bcp14">MUST</span> treat this as a
+connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-4.2.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.2.3-6">RESET_STREAM frames <span class="bcp14">MUST NOT</span> be sent for a stream in the "idle" state. If a
+RESET_STREAM frame identifying an idle stream is received, the recipient <span class="bcp14">MUST</span>
+treat this as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type
+PROTOCOL_ERROR.<a href="#section-4.2.3-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="settings">
+<section id="section-4.2.4">
+          <h4 id="name-settings">
+<a href="#section-4.2.4" class="section-number selfRef">4.2.4. </a><a href="#name-settings" class="section-name selfRef">SETTINGS</a>
+          </h4>
+<p id="section-4.2.4-1">The SETTINGS frame (type=0x05) conveys configuration parameters that affect how
+endpoints communicate, such as preferences and constraints on peer behavior. The
+SETTINGS frame is also used to acknowledge the receipt of those settings.
+Individually, a configuration parameter from a SETTINGS frame is referred to as
+a "setting".<a href="#section-4.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-2">Settings are not negotiated; they describe characteristics of the sending peer,
+which are used by the receiving peer. Different values for the same setting can
+be advertised by each peer. For example, a client might set a high initial
+flow-control window, whereas a server might set a lower value to conserve
+resources.<a href="#section-4.2.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-3">A SETTINGS frame <span class="bcp14">MUST</span> be sent by both endpoints at the start of a connection and
+<span class="bcp14">MUST NOT</span> be sent subsequently. If an endpoint receives a second SETTINGS frame,
+the endpoint <span class="bcp14">MUST</span> respond with a connection error of PROTOCOL_ERROR.<a href="#section-4.2.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-4">SETTINGS frames always apply to a connection, never a single stream. The stream
+identifier for a SETTINGS frame <span class="bcp14">MUST</span> be zero (0x00). If an endpoint receives a
+SETTINGS frame whose Stream Identifier field is anything other than 0x00, the
+endpoint <span class="bcp14">MUST</span> respond with a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of
+type PROTOCOL_ERROR.<a href="#section-4.2.4-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.4-5">The SETTINGS frame affects connection state. A badly formed or incomplete
+SETTINGS frame <span class="bcp14">MUST</span> be treated as a connection error
+(<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-4.2.4-5" class="pilcrow">¶</a></p>
+<span id="name-settings-frame"></span><figure id="figure-5">
+            <div class="alignLeft art-text artwork" id="section-4.2.4-6.1">
+<pre>
+Setting {
+  Identifier (i),
+  Value (i),
+}
+
+SETTINGS Frame {
+  Type (i) = 0x05,
+  Length (i),
+  Stream Identifier (i),
+  Setting (..) ...,
+}
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-settings-frame" class="selfRef">SETTINGS Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.4-7">An implementation <span class="bcp14">MUST</span> ignore any parameter with an identifier it does not understand.<a href="#section-4.2.4-7" class="pilcrow">¶</a></p>
+<div id="defined-settings-parameters">
+<section id="section-4.2.4.1">
+            <h5 id="name-defined-settings-parameters">
+<a href="#section-4.2.4.1" class="section-number selfRef">4.2.4.1. </a><a href="#name-defined-settings-parameters" class="section-name selfRef">Defined SETTINGS Parameters</a>
+            </h5>
+<span class="break"></span><dl class="dlParallel" id="section-4.2.4.1-1">
+              <dt id="section-4.2.4.1-1.1">SETTINGS_HEADER_TABLE_SIZE (0x01):</dt>
+              <dd style="margin-left: 1.5em" id="section-4.2.4.1-1.2">
+                <p id="section-4.2.4.1-1.2.1">This setting allows the sender to inform the remote endpoint of the maximum
+size of the compression table used to decode field blocks, in units of
+bytes. The encoder can select any size equal to or less than this value by
+using signaling specific to the compression format inside a field block
+(see <span>[<a href="#COMPRESSION" class="cite xref">COMPRESSION</a>]</span>). The initial value is 4,096 bytes.<a href="#section-4.2.4.1-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+              <dd class="break"></dd>
+<dt id="section-4.2.4.1-1.3">SETTINGS_INITIAL_WINDOW_SIZE (0x04):</dt>
+              <dd style="margin-left: 1.5em" id="section-4.2.4.1-1.4">
+                <p id="section-4.2.4.1-1.4.1">This setting indicates the sender's initial window size (in units of bytes)
+for stream-level flow control. The initial value is 216-1 (65,535) bytes.<a href="#section-4.2.4.1-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+</dl>
+<p id="section-4.2.4.1-2">This setting affects the window size of all streams (see Section TODO).<a href="#section-4.2.4.1-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-4.2.4.1-3">
+              <dt id="section-4.2.4.1-3.1">SETTINGS_MAX_FIELD_SECTION_SIZE (0x06):</dt>
+              <dd style="margin-left: 1.5em" id="section-4.2.4.1-3.2">
+                <p id="section-4.2.4.1-3.2.1">This advisory setting informs a peer of the maximum field section size that
+the sender is prepared to accept, in units of bytes. See
+<a href="#header-size-constraints" class="auto internal xref">Section 4.4</a> for usage.<a href="#section-4.2.4.1-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+              <dd class="break"></dd>
+<dt id="section-4.2.4.1-3.3"></dt>
+              <dd style="margin-left: 1.5em" id="section-4.2.4.1-3.4">
+                <p id="section-4.2.4.1-3.4.1">For any given request, a lower limit than what is advertised <span class="bcp14">MAY</span> be
+  enforced. The initial value of this setting is unlimited.<a href="#section-4.2.4.1-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+</dl>
+<p id="section-4.2.4.1-4">An endpoint that receives a SETTINGS frame with any unknown or unsupported
+identifier <span class="bcp14">MUST</span> ignore that setting.<a href="#section-4.2.4.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="ping">
+<section id="section-4.2.5">
+          <h4 id="name-ping">
+<a href="#section-4.2.5" class="section-number selfRef">4.2.5. </a><a href="#name-ping" class="section-name selfRef">PING</a>
+          </h4>
+<p id="section-4.2.5-1">The PING frame (type=0x06 or 0x07) is a mechanism for measuring a minimal
+round-trip time from the sender, as well as determining whether an idle
+connection is still functional. PING frames can be sent from any endpoint.<a href="#section-4.2.5-1" class="pilcrow">¶</a></p>
+<span id="name-ping-frame"></span><figure id="figure-6">
+            <div class="alignLeft art-text artwork" id="section-4.2.5-2.1">
+<pre>
+PING Frame {
+  Type (i) = 0x06..0x07,
+  Length (i),
+  Stream Identifier (i),
+  Opaque Data (64),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-ping-frame" class="selfRef">PING Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.5-3">PING frames <span class="bcp14">MUST</span> contain 8 bytes of opaque data in the frame payload. A sender
+can include any value it chooses and use those bytes in any fashion.<a href="#section-4.2.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-4">Receivers of a PING frame of type 0x06 <span class="bcp14">MUST</span> send a PING frame with the type 0x07
+in response, with an identical frame payload. PING responses <span class="bcp14">SHOULD</span> be given
+higher priority than any other frame.<a href="#section-4.2.5-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-5">PING frames are not associated with any individual stream. If a PING frame is
+received with a Stream Identifier field value other than 0x00, the recipient
+<span class="bcp14">MUST</span> respond with a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-4.2.5-5" class="pilcrow">¶</a></p>
+<p id="section-4.2.5-6">Receipt of a PING frame with a length field value other than 8 <span class="bcp14">MUST</span> be treated
+as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type FRAME_SIZE_ERROR.<a href="#section-4.2.5-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="goaway">
+<section id="section-4.2.6">
+          <h4 id="name-goaway">
+<a href="#section-4.2.6" class="section-number selfRef">4.2.6. </a><a href="#name-goaway" class="section-name selfRef">GOAWAY</a>
+          </h4>
+<p id="section-4.2.6-1">The GOAWAY frame (type=0x07) is used to initiate shutdown of a connection or to
+signal serious error conditions. GOAWAY allows an endpoint to gracefully stop
+accepting new streams while still finishing processing of previously established
+streams. This enables administrative actions, like server maintenance.<a href="#section-4.2.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-2">There is an inherent race condition between an endpoint starting new streams and
+the remote peer sending a GOAWAY frame. To deal with this case, the GOAWAY
+contains the stream identifier of the last peer-initiated stream that was or
+might be processed on the sending endpoint in this connection. For instance, if
+the server sends a GOAWAY frame, the identified stream is the highest-numbered
+stream initiated by the client.<a href="#section-4.2.6-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-3">Once the GOAWAY is sent, the sender will ignore frames sent on streams initiated by the receiver if the stream has an identifier higher than the included last stream identifier. Receivers of a GOAWAY frame <span class="bcp14">MUST NOT</span> open additional streams on the connection, although a new connection can be established for new streams.<a href="#section-4.2.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-4">If the receiver of the GOAWAY has sent data on streams with a higher stream
+identifier than what is indicated in the GOAWAY frame, those streams are not or
+will not be processed. The receiver of the GOAWAY frame can treat the streams as
+though they had never been created at all, thereby allowing those streams to be
+retried later on a new connection.<a href="#section-4.2.6-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-5">Endpoints <span class="bcp14">SHOULD</span> always send a GOAWAY frame before closing a connection so that
+the remote peer can know whether a stream has been partially processed or not.
+For example, if an HTTP client sends a POST at the same time that a server
+closes a connection, the client cannot know if the server started to process
+that POST request if the server does not send a GOAWAY frame to indicate what
+streams it might have acted on.<a href="#section-4.2.6-5" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-6">An endpoint might choose to close a connection without sending a GOAWAY for
+misbehaving peers.<a href="#section-4.2.6-6" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-7">A GOAWAY frame might not immediately precede closing of the connection; a
+receiver of a GOAWAY that has no more use for the connection <span class="bcp14">SHOULD</span> still send a
+GOAWAY frame before terminating the connection.<a href="#section-4.2.6-7" class="pilcrow">¶</a></p>
+<span id="name-goaway-frame"></span><figure id="figure-7">
+            <div class="alignLeft art-text artwork" id="section-4.2.6-8.1">
+<pre>
+GOAWAY Frame {
+  Type (i) = 0x08,
+  Length (i),
+  Stream Identifier (i),
+  Last-Stream-ID (i),
+  Error Code (i),
+  Additional Debug Data (..),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-goaway-frame" class="selfRef">GOAWAY Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.6-9">The GOAWAY frame applies to the connection, not a specific stream. An endpoint
+<span class="bcp14">MUST</span> treat a GOAWAY frame with a stream identifier other than 0x00 as a
+connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-4.2.6-9" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-10">The last stream identifier in the GOAWAY frame contains the highest-numbered
+stream identifier for which the sender of the GOAWAY frame might have taken some
+action on or might yet take action on. All streams up to and including the
+identified stream might have been processed in some way. The last stream
+identifier can be set to 0 if no streams were processed.<a href="#section-4.2.6-10" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-11">On streams with lower- or equal-numbered identifiers that were not closed
+completely prior to the connection being closed, reattempting requests,
+transactions, or any protocol activity is not possible, except for idempotent
+actions like HTTP GET, PUT, or DELETE. Any protocol activity that uses
+higher-numbered streams can be safely retried using a new connection.<a href="#section-4.2.6-11" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-12">Activity on streams numbered lower than or equal to the last stream identifier
+might still complete successfully. The sender of a GOAWAY frame might gracefully
+shut down a connection by sending a GOAWAY frame, maintaining the connection in
+an "open" state until all in-progress streams complete.<a href="#section-4.2.6-12" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-13">An endpoint <span class="bcp14">MAY</span> send multiple GOAWAY frames if circumstances change. For
+instance, an endpoint that sends GOAWAY with NO_ERROR during graceful shutdown
+could subsequently encounter a condition that requires immediate termination of
+the connection. The last stream identifier from the last GOAWAY frame received
+indicates which streams could have been acted upon. Endpoints <span class="bcp14">MUST NOT</span> increase
+the value they send in the last stream identifier, since the peers might already
+have retried unprocessed requests on another connection.<a href="#section-4.2.6-13" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-14">A client that is unable to retry requests loses all requests that are in flight
+when the server closes the connection. This is especially true for
+intermediaries that might not be serving clients using HTTP/2. A server that is
+attempting to gracefully shut down a connection <span class="bcp14">SHOULD</span> send an initial GOAWAY
+frame with the last stream identifier set to $BIG_NUMBER and a NO_ERROR code.
+This signals to the client that a shutdown is imminent and that initiating
+further requests is prohibited. After allowing time for any in-flight stream
+creation (at least one round-trip time), the server <span class="bcp14">MAY</span> send another GOAWAY
+frame with an updated last stream identifier. This ensures that a connection can
+be cleanly shut down without losing requests.<a href="#section-4.2.6-14" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-15">After sending a GOAWAY frame, the sender can discard frames for streams
+initiated by the receiver with identifiers higher than the identified last
+stream. However, any frames that alter connection state cannot be completely
+ignored. For instance, HEADERS, PUSH_PROMISE, and CONTINUATION frames <span class="bcp14">MUST</span> be
+minimally processed to ensure that the state maintained for field section
+compression is consistent (see <a href="#field-compression" class="auto internal xref">Section 4.3</a>); similarly, DATA frames
+<span class="bcp14">MUST</span> be counted toward the connection flow-control window. Failure to process
+these frames can cause flow control or field section compression state to become
+unsynchronized.<a href="#section-4.2.6-15" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-16">The GOAWAY frame also contains an error code (<a href="#error-codes" class="auto internal xref">Section 6</a>) that contains the
+reason for closing the connection.<a href="#section-4.2.6-16" class="pilcrow">¶</a></p>
+<p id="section-4.2.6-17">Endpoints <span class="bcp14">MAY</span> append opaque data to the frame payload of any GOAWAY frame.
+Additional debug data is intended for diagnostic purposes only and carries no
+semantic value. Debug information could contain security- or privacy-sensitive
+data. Logged or otherwise persistently stored debug data <span class="bcp14">MUST</span> have adequate
+safeguards to prevent unauthorized access.<a href="#section-4.2.6-17" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="window-update">
+<section id="section-4.2.7">
+          <h4 id="name-window_update">
+<a href="#section-4.2.7" class="section-number selfRef">4.2.7. </a><a href="#name-window_update" class="section-name selfRef">WINDOW_UPDATE</a>
+          </h4>
+<span id="name-window_update-frame"></span><figure id="figure-8">
+            <div class="alignLeft art-text artwork" id="section-4.2.7-1.1">
+<pre>
+WINDOW_UPDATE Frame {
+  Type (i) = 0x09,
+  Length (i),
+  Stream Identifier (i),
+  Window Size Increment (i),
+}
+</pre>
+</div>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-window_update-frame" class="selfRef">WINDOW_UPDATE Frame</a>
+            </figcaption></figure>
+<p id="section-4.2.7-2">The WINDOW_UPDATE frame can be specific to a stream or to the entire connection.
+In the former case, the frame's stream identifier indicates the affected stream;
+in the latter, the value "0" indicates that the entire connection is the subject
+of the frame.<a href="#section-4.2.7-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-3">A receiver <span class="bcp14">MUST</span> treat the receipt of a WINDOW_UPDATE frame with a flow-control
+window increment of 0 as a stream error (<a href="#stream-error-handling" class="auto internal xref">Section 5.4.2</a>) of type
+PROTOCOL_ERROR; errors on the connection flow-control window <span class="bcp14">MUST</span> be treated as
+a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>).<a href="#section-4.2.7-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-4">WINDOW_UPDATE can be sent by a peer that has initiated a stream closure with
+appropriate HEADERS or DATA frame types. This means that a receiver could
+receive a WINDOW_UPDATE frame on a stream in a "half-closed (remote)" or
+"closed" state. A receiver <span class="bcp14">MUST NOT</span> treat this as an error (see
+<a href="#stream-states" class="auto internal xref">Section 5.1</a>).<a href="#section-4.2.7-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-5">A receiver that receives a flow-controlled frame <span class="bcp14">MUST</span> always account for its
+contribution against the connection flow-control window, unless the receiver
+treats this as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>). This is
+necessary even if the frame is in error. The sender counts the frame toward the
+flow-control window, but if the receiver does not, the flow-control window at
+the sender and receiver can become different.<a href="#section-4.2.7-5" class="pilcrow">¶</a></p>
+<p id="section-4.2.7-6">TODO: import almost all the H2 flow control guidance<a href="#section-4.2.7-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="padding">
+<section id="section-4.2.8">
+          <h4 id="name-padding">
+<a href="#section-4.2.8" class="section-number selfRef">4.2.8. </a><a href="#name-padding" class="section-name selfRef">PADDING</a>
+          </h4>
+<p id="section-4.2.8-1">TODO PADDING.<a href="#section-4.2.8-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.8-2">Is it needed and can it be moved into a separate frame safely?<a href="#section-4.2.8-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="maxstreams">
+<section id="section-4.2.9">
+          <h4 id="name-max_streams">
+<a href="#section-4.2.9" class="section-number selfRef">4.2.9. </a><a href="#name-max_streams" class="section-name selfRef">MAX_STREAMS</a>
+          </h4>
+<p id="section-4.2.9-1">TODO MAX_STREAMS<a href="#section-4.2.9-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.9-2">Import from QUIC<a href="#section-4.2.9-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="field-compression">
+<section id="section-4.3">
+        <h3 id="name-field-compression">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-field-compression" class="section-name selfRef">Field Compression</a>
+        </h3>
+<p id="section-4.3-1">HTTP/2 Plus Plus uses HPACK <span>[<a href="#COMPRESSION" class="cite xref">COMPRESSION</a>]</span> to compress header and trailer
+sections, including the control data present in the header section.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">TODO import just enough from RFC 9113 for things to make sense.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-3">To allow for better compression efficiency, the Cookie header field
+(<span>[<a href="#COOKIES" class="cite xref">COOKIES</a>]</span>) <span class="bcp14">MAY</span> be split into separate field lines, each with one or
+more cookie-pairs, before compression. If a decompressed field section contains
+multiple cookie field lines, these <span class="bcp14">MUST</span> be concatenated into a single byte
+string using the two-byte delimiter of "; " (ASCII 0x3b, 0x20) before being
+passed into a context other than HTTP/2, HTTP/2 Plus Plus or HTTP/3, such as an
+HTTP/1.1 connection, or a generic HTTP server application.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="header-size-constraints">
+<section id="section-4.4">
+        <h3 id="name-header-size-constraints">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-header-size-constraints" class="section-name selfRef">Header Size Constraints</a>
+        </h3>
+<p id="section-4.4-1">An HTTP/2 Plus Plus implementation <span class="bcp14">MAY</span> impose a limit on the maximum size of the
+message header it will accept on an individual HTTP message. A server that
+receives a larger header section than it is willing to handle can send an HTTP
+431 (Request Header Fields Too Large) status code (<span>[<a href="#RFC6585" class="cite xref">RFC6585</a>]</span>). A client can
+discard responses that it cannot process. The size of a field list is calculated
+based on the uncompressed size of fields, including the length of the name and
+value in bytes plus an overhead of 32 bytes for each field.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">If an implementation wishes to advise its peer of this limit, it can be conveyed as a number of bytes in the SETTINGS_MAX_FIELD_SECTION_SIZE parameter. An implementation that has received this parameter <span class="bcp14">SHOULD NOT</span> send an HTTP message header that exceeds the indicated size, as the peer will likely refuse to process it. However, an HTTP message can traverse one or more intermediaries before reaching the origin server; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-3.7" class="relref">Section 3.7</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>. Because this limit is applied separately by each implementation that processes the message, messages below this limit are not guaranteed to be accepted.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="compression-state">
+<section id="section-4.5">
+        <h3 id="name-compression-state">
+<a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-compression-state" class="section-name selfRef">Compression State</a>
+        </h3>
+<p id="section-4.5-1">TODO consider if/how allowing only 1 SETTINGS and not providing a SETTINGS ACK affects the text in RFC 9113.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="streams-and-multiplexing">
+<section id="section-5">
+      <h2 id="name-streams-and-multiplexing">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-streams-and-multiplexing" class="section-name selfRef">Streams and Multiplexing</a>
+      </h2>
+<p id="section-5-1">A "stream" is an independent, bidirectional sequence of frames exchanged between
+the client and server within an HTTP/2 Plus Plus connection. Streams have
+several important characteristics:<a href="#section-5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5-2.1">
+          <p id="section-5-2.1.1">A single HTTP/2 connection can contain multiple concurrently open streams,
+with either endpoint interleaving frames from multiple streams.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.2">
+          <p id="section-5-2.2.1">Streams can be established and used unilaterally or shared by either endpoint.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.3">
+          <p id="section-5-2.3.1">Streams can be closed by either endpoint.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.4">
+          <p id="section-5-2.4.1">The order in which frames are sent is significant. Recipients process frames
+in the order they are received. In particular, the order of HEADERS and DATA
+frames is semantically significant.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-5-2.5">
+          <p id="section-5-2.5.1">Streams are identified by an integer. Stream identifiers are assigned to
+streams by the endpoint initiating the stream.<a href="#section-5-2.5.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<div id="stream-states">
+<section id="section-5.1">
+        <h3 id="name-stream-states">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-stream-states" class="section-name selfRef">Stream States</a>
+        </h3>
+<p id="section-5.1-1">The lifecycle of a stream is shown below.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<span id="name-stream-states-2"></span><figure id="figure-9">
+          <div class="alignLeft art-text artwork" id="section-5.1-2.1">
+<pre>
+                             +--------+
+                             |        |
+                             |  idle  |
+                             |        |
+                             +--------+
+                                 |
+                                 | send H /
+                                 | recv H
+                                 |
+                                 v
+              recv D (0x1) / +--------+ send D (0x1) /
+              recv H (0x3)   |        | send H (0x3)
+           ,-----------------+  open  +------------.
+           |                 |        |            |
+           v                 +---+----+            v
+      +----------+               |           +----------+
+      |   half-  |               |           |   half-  |
+      |  closed  |               | send R /  |  closed  |
+      | (remote) |               | recv R    | (local)  |
+      +----+-----+               |           +-----+----+
+           |                     |                 |
+           |  send D (0x1) /     |  recv D (0x1) / |
+           |  send H (0x3) /     |  recv H (0x3) / |
+           |  send R /           v        send R / |
+           |  recv R         +--------+   recv R   |
+           `----------------&gt;|        |&lt;-----------'
+                             | closed |
+                             |        |
+                             +--------+
+</pre>
+</div>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-stream-states-2" class="selfRef">Stream States</a>
+          </figcaption></figure>
+<span class="break"></span><dl class="dlParallel" id="section-5.1-3">
+          <dt id="section-5.1-3.1">send:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.2">
+            <p id="section-5.1-3.2.1">endpoint sends this frame<a href="#section-5.1-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-3.3">recv:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.4">
+            <p id="section-5.1-3.4.1">endpoint receives this frame<a href="#section-5.1-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-3.5">H:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.6">
+            <p id="section-5.1-3.6.1">HEADERS frame<a href="#section-5.1-3.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-3.7">H (0x3):</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.8">
+            <p id="section-5.1-3.8.1">HEADERS frame of type 0x03<a href="#section-5.1-3.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-3.9">D (0x1):</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.10">
+            <p id="section-5.1-3.10.1">DATA frame of type 0x01<a href="#section-5.1-3.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-3.11">R:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.12">
+            <p id="section-5.1-3.12.1">RESET_STREAM frame<a href="#section-5.1-3.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-5.1-4">Note that this diagram shows stream state transitions and the frames that affect
+those transitions only. For the purpose of state transitions, a single HEADERS
+frame of type 0x03 can cause two state transitions (idle to open, and open to
+half-closed).<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">Both endpoints have a subjective view of the state of a stream that could be
+different when frames are in transit. Endpoints do not coordinate the creation
+of streams; they are created unilaterally by either endpoint. The negative
+consequences of a mismatch in states are limited to the "closed" state after
+sending RESET_STREAM, where frames might be received for some time after
+closing.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<p id="section-5.1-6">Streams have the following states:<a href="#section-5.1-6" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5.1-7">
+          <dt id="section-5.1-7.1">idle:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.2">
+            <p id="section-5.1-7.2.1">All streams start in the "idle" state.<a href="#section-5.1-7.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.3"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.4">
+            <p id="section-5.1-7.4.1">The following transitions are valid from this state:<a href="#section-5.1-7.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.5"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.6">
+            <ul class="normal">
+<li class="normal" id="section-5.1-7.6.1.1">
+                <p id="section-5.1-7.6.1.1.1">Sending a HEADERS frame as a client, or receiving a HEADERS frame of
+either type as a server, causes the stream to become "open". The stream
+identifier is selected as described in <a href="#stream-states" class="auto internal xref">Section 5.1</a>.1. The same HEADERS frame
+can also cause a stream to immediately become "half-closed" if the type is
+0x03.<a href="#section-5.1-7.6.1.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-7.6.1.1.2.1">
+                    <p id="section-5.1-7.6.1.1.2.1.1">Opening a stream with a higher-valued stream identifier causes the stream to
+transition immediately to a "closed" state; note that this transition is not
+shown in the diagram.<a href="#section-5.1-7.6.1.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.7"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.8">
+            <p id="section-5.1-7.8.1">Receiving any frame other than HEADERS on a stream in this state <span class="bcp14">MUST</span> be
+treated as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-5.1-7.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.9">half-closed (local):</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.10">
+            <p id="section-5.1-7.10.1">A stream that is in the "half-closed (local)" state cannot be used for sending frames other than WINDOW_UPDATE and RESET_STREAM.<a href="#section-5.1-7.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.11"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.12">
+            <p id="section-5.1-7.12.1">A stream transitions from this state to "closed" when a DATA frame of type
+  0x01 or a HEADERS frame of type 0x03 is received or when either peer sends a
+  RESET_STREAM frame.<a href="#section-5.1-7.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.13"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.14">
+            <p id="section-5.1-7.14.1">An endpoint can receive any type of frame in this state. Providing
+  flow-control credit using WINDOW_UPDATE frames is necessary to continue
+  receiving flow-controlled frames. In this state, a receiver can ignore
+  WINDOW_UPDATE frames, which might arrive for a short period after a either a
+  DATA frame of type 0x01 or a HEADERS frame of type 0x03 is sent.<a href="#section-5.1-7.14.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.15">half-closed (remote):</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.16">
+            <p id="section-5.1-7.16.1">A stream that is "half-closed (remote)" is no longer being used by the peer to send frames. In this state, an endpoint is no longer obligated to maintain a receiver flow-control window.<a href="#section-5.1-7.16.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.17"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.18">
+            <p id="section-5.1-7.18.1">If an endpoint receives additional frames, other than WINDOW_UPDATE,  or
+  RESET_STREAM, for a stream that is in this state, it <span class="bcp14">MUST</span> respond with a
+  stream error (<a href="#stream-error-handling" class="auto internal xref">Section 5.4.2</a>) of type STREAM_CLOSED.<a href="#section-5.1-7.18.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.19"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.20">
+            <p id="section-5.1-7.20.1">A stream that is "half-closed (remote)" can be used by the endpoint to send
+  frames of any type. In this state, the endpoint continues to observe
+  advertised stream-level flow-control limits (<a href="#flow-control" class="auto internal xref">Section 5.2</a>).<a href="#section-5.1-7.20.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.21"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.22">
+            <p id="section-5.1-7.22.1">A stream can transition from this state to "closed" by sending a DATA frame
+  of type 0x01 or a HEADERS frame of type 0x03 or when either peer sends a
+  RESET_STREAM frame.<a href="#section-5.1-7.22.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.23">closed:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.24">
+            <p id="section-5.1-7.24.1">The "closed" state is the terminal state.<a href="#section-5.1-7.24.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.25"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.26">
+            <p id="section-5.1-7.26.1">A stream enters the "closed" state after an endpoint both sends and receives
+  a fa DATA frame of type 0x01 or a HEADERS frame of type 0x03. A stream also
+  enters the "closed" state after an endpoint either sends or receives a
+  RESET_STREAM frame.<a href="#section-5.1-7.26.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.27"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.28">
+            <p id="section-5.1-7.28.1">An endpoint <span class="bcp14">MUST NOT</span> send frames on a closed stream. An endpoint <span class="bcp14">MAY</span> treat
+  receipt of any frame on a closed stream as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>)
+  of type STREAM_CLOSED, except as noted below.<a href="#section-5.1-7.28.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.29"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.30">
+            <p id="section-5.1-7.30.1">An endpoint that sends a DATA frame of type 0x01 or a HEADERS frame of type
+  0x03 or a RESET_STREAM frame might receive a WINDOW_UPDATE or RESET_STREAM
+  frame from its peer in the time before the peer receives and processes the
+  frame that closes the stream.<a href="#section-5.1-7.30.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.31"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.32">
+            <p id="section-5.1-7.32.1">An endpoint that sends a RESET_STREAM frame on a stream that is in the
+"open" or "half-closed (local)" state could receive any type of frame. The peer
+might have sent or enqueued for sending these frames before processing the
+RESET_STREAM frame. An endpoint <span class="bcp14">MUST</span> minimally process and then discard any
+frames it receives in this state. This means updating header compression state
+for HEADERS frames. Additionally, the content of DATA frames counts toward the
+connection flow-control window.<a href="#section-5.1-7.32.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-7.33"></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-7.34">
+            <p id="section-5.1-7.34.1">An endpoint can perform this minimal processing for all streams that are in
+  the "closed" state. Endpoints <span class="bcp14">MAY</span> use other signals to detect that a peer has
+  received the frames that caused the stream to enter the "closed" state and
+  treat receipt of any frame as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type
+  PROTOCOL_ERROR. Endpoints can use frames that indicate that the peer has
+  received the closing signal to drive this. Endpoints <span class="bcp14">SHOULD NOT</span> use timers for
+  this purpose. For example, PING frames, receiving data on streams that were
+  created after closing the stream, or responses to requests created after
+  closing the stream.<a href="#section-5.1-7.34.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-5.1-8">In the absence of more specific rules, implementations <span class="bcp14">SHOULD</span> treat the receipt
+of a frame that is not expressly permitted in the description of a state as a
+connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
+<p id="section-5.1-9">The rules in this section only apply to frames defined in this document. Receipt
+of frames for which the semantics are unknown cannot be treated as an error, as
+the conditions for sending and receiving those frames are also unknown; see
+<a href="#extending" class="auto internal xref">Section 5.5</a>.<a href="#section-5.1-9" class="pilcrow">¶</a></p>
+<p id="section-5.1-10">Streams are identified by an unsigned 31-bit integer. Streams initiated by a client <span class="bcp14">MUST</span> use odd-numbered stream identifiers; those initiated by the server <span class="bcp14">MUST</span> use even-numbered stream identifiers. A stream identifier of zero (0x00) is used for connection control messages; the stream identifier of zero cannot be used to establish a new stream.<a href="#section-5.1-10" class="pilcrow">¶</a></p>
+<p id="section-5.1-11">The identifier of a newly established stream <span class="bcp14">MUST</span> be numerically greater than all streams that the initiating endpoint has opened or reserved. This governs streams that are opened using a HEADERS frame and streams that are reserved using PUSH_PROMISE. An endpoint that receives an unexpected stream identifier <span class="bcp14">MUST</span> respond with a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>) of type PROTOCOL_ERROR.<a href="#section-5.1-11" class="pilcrow">¶</a></p>
+<p id="section-5.1-12">A HEADERS frame will transition the client-initiated stream identified by the
+stream identifier in the frame header from "idle" to "open". A PUSH_PROMISE
+frame will transition the server-initiated stream identified by the Promised
+Stream ID field in the frame payload from "idle" to "reserved (local)" or
+"reserved (remote)". When a stream transitions out of the "idle" state, all
+streams in the "idle" state that might have been opened by the peer with a
+lower-valued stream identifier immediately transition to "closed". That is, an
+endpoint may skip a stream identifier, with the effect being that the skipped
+stream is immediately closed.<a href="#section-5.1-12" class="pilcrow">¶</a></p>
+<div id="stream-identifiers">
+<section id="section-5.1.1">
+          <h4 id="name-stream-identifiers">
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-stream-identifiers" class="section-name selfRef">Stream Identifiers</a>
+          </h4>
+<p id="section-5.1.1-1">Stream identifiers cannot be reused. Long-lived connections can result in an
+endpoint exhausting the available range of stream identifiers. A client that is
+unable to establish a new stream identifier can establish a new connection for
+new streams. A server that is unable to establish a new stream identifier can
+send a GOAWAY frame so that the client is forced to open a new connection for
+new streams.<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="stream-concurrency">
+<section id="section-5.1.2">
+          <h4 id="name-stream-concurrency">
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-stream-concurrency" class="section-name selfRef">Stream Concurrency</a>
+          </h4>
+<p id="section-5.1.2-1">TODO MAX_STREAMS<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-2">Import from QUIC<a href="#section-5.1.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="flow-control">
+<section id="section-5.2">
+        <h3 id="name-flow-control">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-flow-control" class="section-name selfRef">Flow Control</a>
+        </h3>
+<p id="section-5.2-1">Using streams for multiplexing introduces contention over use of the TCP
+connection, resulting in blocked streams. A flow-control scheme ensures that
+streams on the same connection do not destructively interfere with each other.
+Flow control is used for both individual streams and the connection as a whole.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">HTTP/2 Plus Plus provides for flow control through use of the WINDOW_UPDATE
+frame (<a href="#window-update" class="auto internal xref">Section 4.2.7</a>).<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<div id="flow-control-principles">
+<section id="section-5.2.1">
+          <h4 id="name-flow-control-principles">
+<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-flow-control-principles" class="section-name selfRef">Flow-Control Principles</a>
+          </h4>
+<p id="section-5.2.1-1">HTTP/2 Plus Plus  stream flow control aims to allow a variety of flow-control
+algorithms to be used without requiring protocol changes. Flow control has the
+following characteristics:<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-5.2.1-2">
+<li id="section-5.2.1-2.1">
+              <p id="section-5.2.1-2.1.1">Flow control is specific to a connection. HTTP/2 flow control operates
+between the endpoints of a single hop and not over the entire end-to-end
+path.<a href="#section-5.2.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.2.1-2.2">
+              <p id="section-5.2.1-2.2.1">Flow control is based on WINDOW_UPDATE frames. Receivers advertise how many
+bytes they are prepared to receive on a stream and for the entire
+connection. This is a credit-based scheme.<a href="#section-5.2.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.2.1-2.3">
+              <p id="section-5.2.1-2.3.1">Flow control is directional with overall control provided by the receiver. A
+receiver <span class="bcp14">MAY</span> choose to set any window size that it desires for each stream
+and for the entire connection. A sender <span class="bcp14">MUST</span> respect flow-control limits
+imposed by a receiver. Clients, servers, and intermediaries all independently
+advertise their flow-control window as a receiver and abide by the
+flow-control limits set by their peer when sending.<a href="#section-5.2.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.2.1-2.4">
+              <p id="section-5.2.1-2.4.1">The initial value for the flow-control window is 65,535 bytes for both new
+streams and the overall connection.<a href="#section-5.2.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.2.1-2.5">
+              <p id="section-5.2.1-2.5.1">The frame type determines whether flow control applies to a frame. Of the
+frames specified in this document, only DATA frames are subject to flow
+control; all other frame types do not consume space in the advertised
+flow-control window. This ensures that important control frames are not
+blocked by flow control.<a href="#section-5.2.1-2.5.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.2.1-2.6">
+              <p id="section-5.2.1-2.6.1">An endpoint can choose to disable its own flow control, but an endpoint
+cannot ignore flow-control signals from its peer.<a href="#section-5.2.1-2.6.1" class="pilcrow">¶</a></p>
+</li>
+            <li id="section-5.2.1-2.7">
+              <p id="section-5.2.1-2.7.1">HTTP/2 Plus Plus  defines only the format and semantics of the WINDOW_UPDATE
+frame (<a href="#window-update" class="auto internal xref">Section 4.2.7</a>). This document does not stipulate how a receiver
+decides when to send this frame or the value that it sends, nor does it
+specify how a sender chooses to send packets. Implementations are able to
+select any algorithm that suits their needs.<a href="#section-5.2.1-2.7.1" class="pilcrow">¶</a></p>
+</li>
+          </ol>
+<p id="section-5.2.1-3">Implementations are also responsible for prioritizing the sending of requests
+and responses, choosing how to avoid head-of-line blocking for requests, and
+managing the creation of new streams. Algorithm choices for these could interact
+with any flow-control algorithm.<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="appropriate-use-of-flow-control">
+<section id="section-5.2.2">
+          <h4 id="name-appropriate-use-of-flow-con">
+<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-appropriate-use-of-flow-con" class="section-name selfRef">Appropriate Use of Flow Control</a>
+          </h4>
+<p id="section-5.2.2-1">Flow control is defined to protect endpoints that are operating under resource
+constraints. For example, a proxy needs to share memory between many connections
+and also might have a slow upstream connection and a fast downstream one. Flow
+control addresses cases where the receiver is unable to process data on one
+stream yet wants to continue to process other streams in the same connection.<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-2">Deployments that do not require this capability can advertise a flow-control
+window of the maximum size ($BIG_NUMBER) and can maintain this window by sending
+a WINDOW_UPDATE frame when any data is received. This effectively disables flow
+control for that receiver. Conversely, a sender is always subject to the
+flow-control window advertised by the receiver.<a href="#section-5.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-3">Deployments with constrained resources (for example, memory) can employ flow
+control to limit the amount of memory a peer can consume. Note, however, that
+this can lead to suboptimal use of available network resources if flow control
+is enabled without knowledge of the bandwidth * delay product (see
+<span>[<a href="#RFC7323" class="cite xref">RFC7323</a>]</span>).<a href="#section-5.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-4">Even with full awareness of the current bandwidth * delay product,
+implementation of flow control can be difficult. Endpoints <span class="bcp14">MUST</span> read and process
+HTTP/2 Plus Plus frames from the TCP receive buffer as soon as data is
+available. Failure to read promptly could lead to a deadlock when critical
+frames, such as WINDOW_UPDATE, are not read and acted upon. Reading frames
+promptly does not expose endpoints to resource exhaustion attacks, as HTTP/2
+Plus Plus flow control limits resource commitments.<a href="#section-5.2.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="flow-control-performance">
+<section id="section-5.2.3">
+          <h4 id="name-flow-control-performance">
+<a href="#section-5.2.3" class="section-number selfRef">5.2.3. </a><a href="#name-flow-control-performance" class="section-name selfRef">Flow-Control Performance</a>
+          </h4>
+<p id="section-5.2.3-1">If an endpoint cannot ensure that its peer always has available flow-control
+window space that is greater than the peer's bandwidth * delay product on this
+connection, its receive throughput will be limited by HTTP/2 Plus Plus flow
+control. This will result in degraded performance.<a href="#section-5.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.3-2">Sending timely WINDOW_UPDATE frames can improve performance. Endpoints will want
+to balance the need to improve receive throughput with the need to manage
+resource exhaustion risks and should take careful note of Section 10 in defining
+their strategy to manage window sizes.<a href="#section-5.2.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="prioritization">
+<section id="section-5.3">
+        <h3 id="name-prioritization">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-prioritization" class="section-name selfRef">Prioritization</a>
+        </h3>
+<p id="section-5.3-1">In a multiplexed protocol like HTTP/2 Plus Plus, prioritizing allocation of
+bandwidth and computation resources to streams can be critical to attaining good
+performance. A poor prioritization scheme can result in HTTP/2 providing poor
+performance. With no parallelism at the TCP layer, performance could be
+significantly worse than HTTP/1.1.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">It is <span class="bcp14">RECOMMENDED</span> that endpoints use the Extensible Priorities scheme
+<span>[<a href="#PRIORITIES" class="cite xref">PRIORITIES</a>]</span>.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="error-handling">
+<section id="section-5.4">
+        <h3 id="name-error-handling">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-error-handling" class="section-name selfRef">Error Handling</a>
+        </h3>
+<p id="section-5.4-1">HTTP/2 framing permits two classes of errors:<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.4-2.1">
+            <p id="section-5.4-2.1.1">An error condition that renders the entire connection unusable is a
+connection error.<a href="#section-5.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.4-2.2">
+            <p id="section-5.4-2.2.1">An error in an individual stream is a stream error.<a href="#section-5.4-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.4-3">A list of error codes is included in <a href="#error-codes" class="auto internal xref">Section 6</a>.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
+<p id="section-5.4-4">It is possible that an endpoint will encounter frames that would cause multiple
+errors. Implementations <span class="bcp14">MAY</span> discover multiple errors during processing, but they
+<span class="bcp14">SHOULD</span> report at most one stream and one connection error as a result.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
+<p id="section-5.4-5">The first stream error reported for a given stream prevents any other errors on
+that stream from being reported. In comparison, the protocol permits multiple
+GOAWAY frames, though an endpoint <span class="bcp14">SHOULD</span> report just one type of connection
+error unless an error is encountered during graceful shutdown. If this occurs,
+an endpoint <span class="bcp14">MAY</span> send an additional GOAWAY frame with the new error code, in
+addition to any prior GOAWAY that contained NO_ERROR.<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.4-6">If an endpoint detects multiple different errors, it <span class="bcp14">MAY</span> choose to report any
+one of those errors. If a frame causes a connection error, that error <span class="bcp14">MUST</span> be
+reported. Additionally, an endpoint <span class="bcp14">MAY</span> use any applicable error code when it
+detects an error condition; a generic error code (such as PROTOCOL_ERROR or
+INTERNAL_ERROR) can always be used in place of more specific error codes.<a href="#section-5.4-6" class="pilcrow">¶</a></p>
+<div id="connection-error-handling">
+<section id="section-5.4.1">
+          <h4 id="name-connection-error-handling">
+<a href="#section-5.4.1" class="section-number selfRef">5.4.1. </a><a href="#name-connection-error-handling" class="section-name selfRef">Connection Error Handling</a>
+          </h4>
+<p id="section-5.4.1-1">A connection error is any error that prevents further processing of the frame
+layer or corrupts any connection state.<a href="#section-5.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.4.1-2">An endpoint that encounters a connection error <span class="bcp14">SHOULD</span> first send a GOAWAY frame
+(<a href="#goaway" class="auto internal xref">Section 4.2.6</a>) with the stream identifier of the last stream that it successfully
+received from its peer. The GOAWAY frame includes an error code
+(<a href="#error-codes" class="auto internal xref">Section 6</a>) that indicates why the connection is terminating. After
+sending the GOAWAY frame for an error condition, the endpoint <span class="bcp14">MUST</span> close the TCP
+connection.<a href="#section-5.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-5.4.1-3">It is possible that the GOAWAY will not be reliably received by the receiving
+endpoint. In the event of a connection error, GOAWAY only provides a best-effort
+attempt to communicate with the peer about why the connection is being
+terminated.<a href="#section-5.4.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.4.1-4">An endpoint can end a connection at any time. In particular, an endpoint <span class="bcp14">MAY</span>
+choose to treat a stream error as a connection error. Endpoints <span class="bcp14">SHOULD</span> send a
+GOAWAY frame when ending a connection, providing that circumstances permit it.<a href="#section-5.4.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="stream-error-handling">
+<section id="section-5.4.2">
+          <h4 id="name-stream-error-handling">
+<a href="#section-5.4.2" class="section-number selfRef">5.4.2. </a><a href="#name-stream-error-handling" class="section-name selfRef">Stream Error Handling</a>
+          </h4>
+<p id="section-5.4.2-1">A stream error is an error related to a specific stream that does not affect
+processing of other streams.<a href="#section-5.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.4.2-2">An endpoint that detects a stream error sends a RESET_STREAM frame
+(<a href="#reset-stream" class="auto internal xref">Section 4.2.3</a>) that contains the stream identifier of the stream where the
+error occurred. The RESET_STREAM frame includes an error code that indicates the
+type of error.<a href="#section-5.4.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.4.2-3">A RESET_STREAM is the last frame that an endpoint can send on a stream. The peer
+that sends the RESET_STREAM frame <span class="bcp14">MUST</span> be prepared to receive any frames that
+were sent or enqueued for sending by the remote peer. These frames can be
+ignored, except where they modify connection state (such as the state maintained
+for field section compression (<a href="#field-compression" class="auto internal xref">Section 4.3</a>) or flow control).<a href="#section-5.4.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.4.2-4">Normally, an endpoint <span class="bcp14">SHOULD NOT</span> send more than one RESET_STREAM frame for any
+stream. However, an endpoint <span class="bcp14">MAY</span> send additional RESET_STREAM frames if it
+receives frames on a closed stream after more than a round-trip time. This
+behavior is permitted to deal with misbehaving implementations.<a href="#section-5.4.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.4.2-5">To avoid looping, an endpoint <span class="bcp14">MUST NOT</span> send a RESET_STREAM in response to a
+RESET_STREAM frame.<a href="#section-5.4.2-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="connection-termination">
+<section id="section-5.4.3">
+          <h4 id="name-connection-termination">
+<a href="#section-5.4.3" class="section-number selfRef">5.4.3. </a><a href="#name-connection-termination" class="section-name selfRef">Connection Termination</a>
+          </h4>
+<p id="section-5.4.3-1">If the TCP connection is closed or reset while streams remain in the "open" or
+"half-closed" states, then the affected streams cannot be automatically retried
+(see <a href="#request-reliability" class="auto internal xref">Section 7.6</a> for details).<a href="#section-5.4.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="extending">
+<section id="section-5.5">
+        <h3 id="name-extending-http-2-plus-plus">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-extending-http-2-plus-plus" class="section-name selfRef">Extending HTTP/2 Plus Plus</a>
+        </h3>
+<p id="section-5.5-1">TODO<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="error-codes">
+<section id="section-6">
+      <h2 id="name-error-codes">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-error-codes" class="section-name selfRef">Error Codes</a>
+      </h2>
+<p id="section-6-1">Error codes are used in RESET_STREAM and GOAWAY frames to convey the reasons for
+the stream or connection error.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">Error codes share a common code space. Some error codes apply only to either
+streams or the entire connection and have no defined semantics in the other
+context.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">The following error codes are defined:<a href="#section-6-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-6-4">
+        <dt id="section-6-4.1">NO_ERROR (0x00):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.2">
+          <p id="section-6-4.2.1">The associated condition is not a result of an error. For example, a GOAWAY
+might include this code to indicate graceful shutdown of a connection.<a href="#section-6-4.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.3">PROTOCOL_ERROR (0x01):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.4">
+          <p id="section-6-4.4.1">The endpoint detected an unspecific protocol error. This error is for use
+when a more specific error code is not available.<a href="#section-6-4.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.5">INTERNAL_ERROR (0x02):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.6">
+          <p id="section-6-4.6.1">The endpoint encountered an unexpected internal error.<a href="#section-6-4.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.7">FLOW_CONTROL_ERROR (0x03):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.8">
+          <p id="section-6-4.8.1">The endpoint detected that its peer violated the flow-control protocol.<a href="#section-6-4.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.9">RESERVED (0x04):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.10">
+          <p id="section-6-4.10.1">Was HTTP/2 SETTINGS_TIMEOUT.<a href="#section-6-4.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.11">STREAM_CLOSED (0x05):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.12">
+          <p id="section-6-4.12.1">The endpoint received a frame after a stream was half-closed.<a href="#section-6-4.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.13">FRAME_SIZE_ERROR (0x06):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.14">
+          <p id="section-6-4.14.1">The endpoint received a frame with an invalid size.<a href="#section-6-4.14.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.15">REFUSED_STREAM (0x07):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.16">
+          <p id="section-6-4.16.1">The endpoint refused the stream prior to performing any application
+processing (see <a href="#request-reliability" class="auto internal xref">Section 7.6</a> for details).<a href="#section-6-4.16.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.17">CANCEL (0x08):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.18">
+          <p id="section-6-4.18.1">The endpoint uses this error code to indicate that the stream is no longer
+needed.<a href="#section-6-4.18.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.19">COMPRESSION_ERROR (0x09):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.20">
+          <p id="section-6-4.20.1">The endpoint is unable to maintain the field section compression context
+for the connection.<a href="#section-6-4.20.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.21">CONNECT_ERROR (0x0a):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.22">
+          <p id="section-6-4.22.1">The connection established in response to a CONNECT request
+   (<a href="#the-connect-method" class="auto internal xref">Section 7.4</a>) was reset or abnormally closed.<a href="#section-6-4.22.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.23">ENHANCE_YOUR_CALM (0x0b):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.24">
+          <p id="section-6-4.24.1">The endpoint detected that its peer is exhibiting a behavior that might be
+generating excessive load.<a href="#section-6-4.24.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.25">INADEQUATE_SECURITY (0x0c):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.26">
+          <p id="section-6-4.26.1">The underlying transport has properties that do not meet minimum security
+requirements (see <a href="#use-of-tls-features" class="auto internal xref">Section 8.2</a>).<a href="#section-6-4.26.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-4.27">HTTP_1_1_REQUIRED (0x0d):</dt>
+        <dd style="margin-left: 1.5em" id="section-6-4.28">
+          <p id="section-6-4.28.1">The endpoint requires that HTTP/1.1 be used instead of HTTP/2.<a href="#section-6-4.28.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-6-5">Unknown or unsupported error codes <span class="bcp14">MUST NOT</span> trigger any special behavior. These
+<span class="bcp14">MAY</span> be treated by an implementation as being equivalent to INTERNAL_ERROR.<a href="#section-6-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="expressing-http-semantics-in-http2-plus-plus">
+<section id="section-7">
+      <h2 id="name-expressing-http-semantics-i">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-expressing-http-semantics-i" class="section-name selfRef">Expressing HTTP Semantics in HTTP/2 Plus Plus</a>
+      </h2>
+<p id="section-7-1">HTTP/2 is an instantiation of the HTTP message abstraction (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6" class="relref">Section 6</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="http-message-framing">
+<section id="section-7.1">
+        <h3 id="name-http-message-framing">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-http-message-framing" class="section-name selfRef">HTTP Message Framing</a>
+        </h3>
+<p id="section-7.1-1">A client sends an HTTP request on a new stream, using a previously unused stream
+identifier (<a href="#stream-states" class="auto internal xref">Section 5.1</a>.1). A server sends an HTTP response on the same
+stream as the request.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">An HTTP message (request or response) consists of:<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7.1-3">
+<li id="section-7.1-3.1">
+            <p id="section-7.1-3.1.1">one HEADERS frame containing the header section (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.3" class="relref">Section 6.3</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>),<a href="#section-7.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.2">
+            <p id="section-7.1-3.2.1">zero or more DATA frames containing the message content (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.4" class="relref">Section 6.4</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>), and<a href="#section-7.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.3">
+            <p id="section-7.1-3.3.1">optionally, one HEADERS frame  containing the trailer section, if present
+(see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.5" class="relref">Section 6.5</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-7.1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-7.1-4">For a response only, a server <span class="bcp14">MAY</span> send any number of interim responses before
+the HEADERS frame containing a final response. An interim response consists of a
+HEADERS frame containing the control data and header section of an interim (1xx)
+HTTP response (see Section 15 of <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>). A HEADERS frame of type 0x03 that
+carries an informational status code is malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.1-4" class="pilcrow">¶</a></p>
+<p id="section-7.1-5">The last frame in the sequence ends the stream using either a DATA frame of type
+0x01 or a HEADERS frame of type 0x03.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
+<p id="section-7.1-6">HTTP/2 uses DATA frames to carry message content. The chunked transfer encoding
+defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> cannot be used in HTTP/2 Plus Plus; see
+<a href="#connection-specific-header-fields" class="auto internal xref">Section 7.2.2</a>.<a href="#section-7.1-6" class="pilcrow">¶</a></p>
+<p id="section-7.1-7">Trailer fields are carried a HEADERS frame of type 0x03. Trailers <span class="bcp14">MUST NOT</span>
+include pseudo-header fields (<a href="#http-control-data" class="auto internal xref">Section 7.3</a>). An endpoint that receives
+pseudo-header fields in trailers <span class="bcp14">MUST</span> treat the request or response as malformed
+(<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.1-7" class="pilcrow">¶</a></p>
+<p id="section-7.1-8">An endpoint that receives a HEADERS frame of type 0x02 after receiving the
+HEADERS frame that opens a request or after receiving a final
+(non-informational) status code <span class="bcp14">MUST</span> treat the corresponding request or response
+as malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.1-8" class="pilcrow">¶</a></p>
+<p id="section-7.1-9">An HTTP request/response exchange fully consumes a single stream. A request
+starts with the HEADERS frame that puts the stream into the "open" state. The
+request ends with a either a DATA frame of type 0x01 or a HEADERS frame of type
+0x03, which causes the stream to become "half-closed (local)" for the client and
+"half-closed (remote)" for the server. A response stream starts with zero or
+more interim responses in HEADERS frames, followed by a HEADERS frame containing
+a final status code.<a href="#section-7.1-9" class="pilcrow">¶</a></p>
+<p id="section-7.1-10">An HTTP response is complete after the server sends -- or the client receives --
+either a DATA frame of type 0x01 or a HEADERS frame of type 0x03. A server can
+send a complete response prior to the client sending an entire request if the
+response does not depend on any portion of the request that has not been sent
+and received. When this is true, a server <span class="bcp14">MAY</span> request that the client abort
+transmission of a request without error by sending a RESET_STREAM with an error
+code of NO_ERROR after sending a complete response (i.e., either a DATA frame of
+type 0x01 or a HEADERS frame of type 0x03). Clients <span class="bcp14">MUST NOT</span> discard responses
+as a result of receiving such a RESET_STREAM, though clients can always discard
+responses at their discretion for other reasons.<a href="#section-7.1-10" class="pilcrow">¶</a></p>
+<div id="malformed-messages">
+<section id="section-7.1.1">
+          <h4 id="name-malformed-messages">
+<a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-malformed-messages" class="section-name selfRef">Malformed Messages</a>
+          </h4>
+<p id="section-7.1.1-1">A malformed request or response is one that is an otherwise valid sequence of
+HTTP/2 Plus Plus frames but is invalid due to the presence of extraneous frames,
+prohibited fields or pseudo-header fields, the absence of mandatory
+pseudo-header fields, the inclusion of uppercase field names, or invalid field
+names and/or values (in certain circumstances; see <a href="#http-fields" class="auto internal xref">Section 7.2</a>).<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-2">A request or response that includes message content can include a content-length
+header field. A request or response is also malformed if the value of a
+content-length header field does not equal the sum of the DATA frame payload
+lengths that form the content, unless the message is defined as having no
+content. For example, 204 or 304 responses contain no content, as does the
+response to a HEAD request. A response that is defined to have no content, as
+described in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.4.1" class="relref">Section 6.4.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>, <span class="bcp14">MAY</span> have a non-zero content-length
+header field, even though no content is included in DATA frames.<a href="#section-7.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-3">Intermediaries that process HTTP requests or responses (i.e., any intermediary
+not acting as a tunnel) <span class="bcp14">MUST NOT</span> forward a malformed request or response.
+Malformed requests or responses that are detected <span class="bcp14">MUST</span> be treated as a stream
+error (<a href="#stream-error-handling" class="auto internal xref">Section 5.4.2</a>) of type PROTOCOL_ERROR.<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-4">For malformed requests, a server <span class="bcp14">MAY</span> send an HTTP response prior to closing or
+resetting the stream. Clients <span class="bcp14">MUST NOT</span> accept a malformed response.<a href="#section-7.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-5">Endpoints that progressively process messages might have performed some
+processing before identifying a request or response as malformed. For instance,
+it might be possible to generate an informational or 404 status code without
+having received a complete request. Similarly, intermediaries might forward
+incomplete messages before detecting errors. A server <span class="bcp14">MAY</span> generate a final
+response before receiving an entire request when the response does not depend on
+the remainder of the request being correct.<a href="#section-7.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-6">These requirements are intended to protect against several types of common
+attacks against HTTP; they are deliberately strict because being permissive can
+expose implementations to these vulnerabilities.<a href="#section-7.1.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="http-fields">
+<section id="section-7.2">
+        <h3 id="name-http-fields">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-http-fields" class="section-name selfRef">HTTP Fields</a>
+        </h3>
+<p id="section-7.2-1">HTTP fields <span><a href="https://rfc-editor.org/rfc/rfc9110#section-5" class="relref">Section 5</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> are conveyed by HTTP/2 Plus Plus in HEADERS
+frames, compresses with HPACK <span>[<a href="#COMPRESSION" class="cite xref">COMPRESSION</a>]</span>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">Field names <span class="bcp14">MUST</span> be converted to lowercase when constructing an HTTP/2 Plus Plus
+message.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+<div id="field-validity">
+<section id="section-7.2.1">
+          <h4 id="name-field-validity">
+<a href="#section-7.2.1" class="section-number selfRef">7.2.1. </a><a href="#name-field-validity" class="section-name selfRef">Field Validity</a>
+          </h4>
+<p id="section-7.2.1-1">The definitions of field names and values in HTTP prohibit some characters that
+HPACK might be able to convey. HTTP/2 implementations <span class="bcp14">SHOULD</span> validate field
+names and values according to their definitions in Sections <a href="https://rfc-editor.org/rfc/rfc9110#section-5.1" class="relref">5.1</a> and <a href="https://rfc-editor.org/rfc/rfc9110#section-5.5" class="relref">5.5</a> of <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>, respectively, and treat messages that contain prohibited characters
+as malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.2.1-2">Failure to validate fields can be exploited for request smuggling attacks. In
+particular, unvalidated fields might enable attacks when messages are forwarded
+using HTTP/1.1 <span>[<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span>, where characters such as carriage return (CR), line
+feed (LF), and COLON are used as delimiters. Implementations <span class="bcp14">MUST</span> perform the
+following minimal validation of field names and values:<a href="#section-7.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.2.1-3">A field name <span class="bcp14">MUST NOT</span> contain characters in the ranges 0x00-0x20, 0x41-0x5a, or
+0x7f-0xff (all ranges inclusive). This specifically excludes all non-visible
+ASCII characters, ASCII SP (0x20), and uppercase characters ('A' to 'Z', ASCII
+0x41 to 0x5a). With the exception of pseudo-header fields
+(<a href="#http-control-data" class="auto internal xref">Section 7.3</a>), which have a name that starts with a single colon,
+field names <span class="bcp14">MUST NOT</span> include a colon (ASCII COLON, 0x3a). A field value <span class="bcp14">MUST NOT</span>
+contain the zero value (ASCII NUL, 0x00), line feed (ASCII LF, 0x0a), or
+carriage return (ASCII CR, 0x0d) at any position. A field value <span class="bcp14">MUST NOT</span> start
+or end with an ASCII whitespace character (ASCII SP or HTAB, 0x20 or 0x09).
+Note: An implementation that validates fields according to the definitions in
+Sections <a href="https://rfc-editor.org/rfc/rfc9110#section-5.1" class="relref">5.1</a> and <a href="https://rfc-editor.org/rfc/rfc9110#section-5.5" class="relref">5.5</a> of <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span> only needs an additional check that field
+names do not include uppercase characters.<a href="#section-7.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.2.1-4">A request or response that contains a field that violates any of these
+conditions <span class="bcp14">MUST</span> be treated as malformed <a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>. In particular,
+an intermediary that does not process fields when forwarding messages <span class="bcp14">MUST NOT</span>
+forward fields that contain any of the values that are listed as prohibited
+above.<a href="#section-7.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-7.2.1-5">When a request message violates one of these requirements, an implementation
+<span class="bcp14">SHOULD</span> generate a 400 (Bad Request) status code (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.1" class="relref">Section 15.5.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>), unless a more suitable status code is defined or the status code
+cannot be sent (e.g., because the error occurs in a trailer field).<a href="#section-7.2.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="connection-specific-header-fields">
+<section id="section-7.2.2">
+          <h4 id="name-connection-specific-header-">
+<a href="#section-7.2.2" class="section-number selfRef">7.2.2. </a><a href="#name-connection-specific-header-" class="section-name selfRef">Connection-Specific Header Fields</a>
+          </h4>
+<p id="section-7.2.2-1">HTTP/2 Plus Plus does not use the Connection header field <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6.1" class="relref">Section 7.6.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> to indicate connection-specific header fields; in this protocol,
+connection-specific metadata is conveyed by other means. An endpoint <span class="bcp14">MUST NOT</span>
+generate an HTTP/2 Plus Plus message containing connection-specific header
+fields. This includes the Connection header field and those listed as having
+connection-specific semantics in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6.1" class="relref">Section 7.6.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span> (that is,
+Proxy-Connection, Keep-Alive, Transfer-Encoding, and Upgrade). Any message
+containing connection-specific header fields <span class="bcp14">MUST</span> be treated as malformed
+(<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2.2-2">The only exception to this is the TE header field, which <span class="bcp14">MAY</span> be present in an
+HTTP/2 Plus Plus request; when it is, it <span class="bcp14">MUST NOT</span> contain any value other than
+"trailers".<a href="#section-7.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-7.2.2-3">An intermediary transforming an HTTP/1.x message to HTTP/2 Plus Plus <span class="bcp14">MUST</span> remove
+connection-specific header fields as discussed in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.6.1" class="relref">Section 7.6.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>,
+or their messages will be treated by other HTTP/2 endpoints as malformed
+(<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.2.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="http-control-data">
+<section id="section-7.3">
+        <h3 id="name-http-control-data">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-http-control-data" class="section-name selfRef">HTTP Control Data</a>
+        </h3>
+<p id="section-7.3-1">HTTP/2 uses special pseudo-header fields beginning with a ':' character (ASCII
+0x3a) to convey message control data (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.2" class="relref">Section 6.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-2">Pseudo-header fields are not HTTP header fields. Endpoints <span class="bcp14">MUST NOT</span> generate
+pseudo-header fields other than those defined in this document. Note that an
+extension could negotiate the use of additional pseudo-header fields; see
+<a href="#extending" class="auto internal xref">Section 5.5</a>.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
+<p id="section-7.3-3">Pseudo-header fields are only valid in the context in which they are defined.
+Pseudo-header fields defined for requests <span class="bcp14">MUST NOT</span> appear in responses;
+pseudo-header fields defined for responses <span class="bcp14">MUST NOT</span> appear in requests.
+Pseudo-header fields <span class="bcp14">MUST NOT</span> appear in a trailer section. Endpoints <span class="bcp14">MUST</span> treat
+a request or response that contains undefined or invalid pseudo-header fields as
+malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.3-3" class="pilcrow">¶</a></p>
+<p id="section-7.3-4">All pseudo-header fields <span class="bcp14">MUST</span> appear in the header section before regular
+header fields. Any request or response that contains a pseudo-header field that
+appears in a header section after a regular header field <span class="bcp14">MUST</span> be treated as
+malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.3-4" class="pilcrow">¶</a></p>
+<p id="section-7.3-5">The same pseudo-header field name <span class="bcp14">MUST NOT</span> appear more than once in a field
+block. A field block for an HTTP request or response that contains a repeated
+pseudo-header field name <span class="bcp14">MUST</span> be treated as malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.3-5" class="pilcrow">¶</a></p>
+<div id="request-pseudo-header-fields">
+<section id="section-7.3.1">
+          <h4 id="name-request-pseudo-header-field">
+<a href="#section-7.3.1" class="section-number selfRef">7.3.1. </a><a href="#name-request-pseudo-header-field" class="section-name selfRef">Request Pseudo-Header Fields</a>
+          </h4>
+<p id="section-7.3.1-1">The following pseudo-header fields are defined for requests:<a href="#section-7.3.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-7.3.1-2">
+            <dt id="section-7.3.1-2.1">":method":</dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.2">
+              <p id="section-7.3.1-2.2.1">Contains the HTTP method (<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9" class="relref">Section 9</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-7.3.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.3">":scheme":</dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.4">
+              <p id="section-7.3.1-2.4.1">Contains the scheme portion of the request target URI (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).<a href="#section-7.3.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.5"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.6">
+              <p id="section-7.3.1-2.6.1">When generating a request directly, or from the scheme of a translated request
+(for example, see <span><a href="https://rfc-editor.org/rfc/rfc9112#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9112" class="cite xref">HTTP/1.1</a>]</span>). Scheme is omitted for CONNECT
+requests (<a href="#the-connect-method" class="auto internal xref">Section 7.4</a>).<a href="#section-7.3.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.7"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.8">
+              <p id="section-7.3.1-2.8.1">":scheme" is not restricted to "http" and "https" schemed URIs. A proxy or
+gateway can translate requests for non-HTTP schemes, enabling the use of HTTP to
+interact with non-HTTP services.<a href="#section-7.3.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.9">":authority"</dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.10">
+              <p id="section-7.3.1-2.10.1">Contains the authority portion (<span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>) of the target URI
+(<span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>). The recipient of a request <span class="bcp14">MUST NOT</span> use the Host
+header field to determine the target URI if ":authority" is present.<a href="#section-7.3.1-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.11"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.12">
+              <p id="section-7.3.1-2.12.1">Clients that generate HTTP/2 requests directly <span class="bcp14">MUST</span> use the ":authority"
+pseudo-header field to convey authority information, unless there is no
+authority information to convey (in which case it <span class="bcp14">MUST NOT</span> generate
+":authority").<a href="#section-7.3.1-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.13"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.14">
+              <p id="section-7.3.1-2.14.1">Clients <span class="bcp14">MUST NOT</span> generate a request with a Host header field that differs from
+the ":authority" pseudo-header field. A server <span class="bcp14">SHOULD</span> treat a request as
+malformed if it contains a Host header field that identifies an entity that
+differs from the entity in the ":authority" pseudo-header field. The values of
+fields need to be normalized to compare them (see <span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2" class="relref">Section 6.2</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>).
+An origin server can apply any normalization method, whereas other servers <span class="bcp14">MUST</span>
+perform scheme-based normalization (see <span><a href="https://rfc-editor.org/rfc/rfc3986#section-6.2.3" class="relref">Section 6.2.3</a> of [<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>) of the two
+fields.<a href="#section-7.3.1-2.14.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.15"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.16">
+              <p id="section-7.3.1-2.16.1">An intermediary that forwards a request over HTTP/2 Plus Plus <span class="bcp14">MUST</span> construct
+an ":authority" pseudo-header field using the authority information from the
+control data of the original request, unless the original request's target URI
+does not contain authority information (in which case it <span class="bcp14">MUST NOT</span> generate
+":authority"). Note that the Host header field is not the sole source of this
+information; see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.2" class="relref">Section 7.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-7.3.1-2.16.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.17"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.18">
+              <p id="section-7.3.1-2.18.1">An intermediary that needs to generate a Host header field (which might be
+necessary to construct an HTTP/1.1 request) <span class="bcp14">MUST</span> use the value from the
+":authority" pseudo-header field as the value of the Host field, unless the
+intermediary also changes the request target. This replaces any existing Host
+field to avoid potential vulnerabilities in HTTP routing.<a href="#section-7.3.1-2.18.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.19"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.20">
+              <p id="section-7.3.1-2.20.1">An intermediary that forwards a request over HTTP/2 <span class="bcp14">MAY</span> retain any Host header
+field.<a href="#section-7.3.1-2.20.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.21"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.22">
+              <p id="section-7.3.1-2.22.1">Note that request targets for CONNECT or asterisk-form OPTIONS requests never
+include authority information; see Sections <a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">7.1</a> and <a href="https://rfc-editor.org/rfc/rfc9110#section-7.2" class="relref">7.2</a> of <span>[<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-7.3.1-2.22.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.23"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.24">
+              <p id="section-7.3.1-2.24.1">":authority" <span class="bcp14">MUST NOT</span> include the deprecated userinfo subcomponent for "http"
+or "https" schemed URIs.<a href="#section-7.3.1-2.24.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.25">":path":</dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.26">
+              <p id="section-7.3.1-2.26.1">Contains the path and query parts of the target URI (the absolute-path
+production and, optionally, a '?' character followed by the query production;
+see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>). A request in asterisk form (for OPTIONS)
+includes the value '*' for the ":path" pseudo-header field.<a href="#section-7.3.1-2.26.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.27"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.28">
+              <p id="section-7.3.1-2.28.1">This pseudo-header field <span class="bcp14">MUST NOT</span> be empty for "http" or "https" URIs; "http"
+or "https" URIs that do not contain a path component <span class="bcp14">MUST</span> include a value of
+'/'. The exceptions to this rule are:<a href="#section-7.3.1-2.28.1" class="pilcrow">¶</a></p>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.29"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.30">
+              <ul class="normal">
+<li class="normal" id="section-7.3.1-2.30.1.1">
+                  <p id="section-7.3.1-2.30.1.1.1">an OPTIONS request for an "http" or "https" URI that does not include a path
+component; these <span class="bcp14">MUST</span> include a ":path" pseudo-header field with a value of '*'
+(see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-7.1" class="relref">Section 7.1</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-7.3.1-2.30.1.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.31"></dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.32">
+              <ul class="normal">
+<li class="normal" id="section-7.3.1-2.32.1.1">
+                  <p id="section-7.3.1-2.32.1.1.1">CONNECT requests (<a href="#the-connect-method" class="auto internal xref">Section 7.4</a>), where the ":path" pseudo-header
+field is omitted.<a href="#section-7.3.1-2.32.1.1.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</dd>
+            <dd class="break"></dd>
+<dt id="section-7.3.1-2.33">":protocol":</dt>
+            <dd style="margin-left: 1.5em" id="section-7.3.1-2.34">
+              <p id="section-7.3.1-2.34.1">NEW MTI! See <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span><a href="#section-7.3.1-2.34.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+</dl>
+<p id="section-7.3.1-3">All HTTP/2 requests <span class="bcp14">MUST</span> include exactly one valid value for the ":method",
+":scheme", and ":path" pseudo-header fields, unless they are CONNECT requests
+(<a href="#the-connect-method" class="auto internal xref">Section 7.4</a>). An HTTP request that omits mandatory pseudo-header
+fields is malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.3.1-4">Individual requests do not carry an explicit indicator of protocol version. All
+HTTP/2 Plus Plus requests implicitly have a protocol version of "2.lol" (see
+<span><a href="https://rfc-editor.org/rfc/rfc9110#section-6.2" class="relref">Section 6.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-7.3.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="response-pseudo-header-fields">
+<section id="section-7.3.2">
+          <h4 id="name-response-pseudo-header-fiel">
+<a href="#section-7.3.2" class="section-number selfRef">7.3.2. </a><a href="#name-response-pseudo-header-fiel" class="section-name selfRef">Response Pseudo-Header Fields</a>
+          </h4>
+<p id="section-7.3.2-1">For HTTP/2 responses, a single ":status" pseudo-header field is defined that
+carries the HTTP status code field (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15" class="relref">Section 15</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>). This
+pseudo-header field <span class="bcp14">MUST</span> be included in all responses, including interim
+responses; otherwise, the response is malformed (<a href="#malformed-messages" class="auto internal xref">Section 7.1.1</a>).<a href="#section-7.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.3.2-2">HTTP/2 responses implicitly have a protocol version of "2.lol".<a href="#section-7.3.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="the-connect-method">
+<section id="section-7.4">
+        <h3 id="name-the-connect-method">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-the-connect-method" class="section-name selfRef">The CONNECT Method</a>
+        </h3>
+<p id="section-7.4-1">TODO Consider deprecating the RFC7540 use and instead mandate
+<span>[<a href="#I-D.ietf-httpbis-connect-tcp" class="cite xref">I-D.ietf-httpbis-connect-tcp</a>]</span>. This would affect other references to CONNECT
+in this draft.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="the-upgrade-header-field">
+<section id="section-7.5">
+        <h3 id="name-the-upgrade-header-field">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-the-upgrade-header-field" class="section-name selfRef">The Upgrade Header Field</a>
+        </h3>
+<p id="section-7.5-1">HTTP/2 Plus Plus does not support the 101 (Switching Protocols) informational
+status code <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.2.2" class="relref">Section 15.2.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>.<a href="#section-7.5-1" class="pilcrow">¶</a></p>
+<p id="section-7.5-2">The semantics of 101 (Switching Protocols) aren't applicable to a multiplexed
+protocol. Similar functionality can be achieved through the :protocol
+psuedo-header.<a href="#section-7.5-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="request-reliability">
+<section id="section-7.6">
+        <h3 id="name-request-reliability">
+<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-request-reliability" class="section-name selfRef">Request Reliability</a>
+        </h3>
+<p id="section-7.6-1">In general, an HTTP client is unable to retry a non-idempotent request when an
+error occurs because there is no means to determine the nature of the error (see
+<span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.2.2" class="relref">Section 9.2.2</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>). It is possible that some server processing
+occurred prior to the error, which could result in undesirable effects if the
+request were reattempted.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+<p id="section-7.6-2">HTTP/2 Plus Plus provides two mechanisms for providing a guarantee to a client
+that a request has not been processed:<a href="#section-7.6-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.6-3.1">
+            <p id="section-7.6-3.1.1">The GOAWAY frame indicates the highest stream number that might have been
+processed. Requests on streams with higher numbers are therefore guaranteed to
+be safe to retry.<a href="#section-7.6-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.6-3.2">
+            <p id="section-7.6-3.2.1">The REFUSED_STREAM error code can be included in a RESET_STREAM frame to
+indicate that the stream is being closed prior to any processing having
+occurred. Any request that was sent on the reset stream can be safely retried.
+Requests that have not been processed have not failed; clients <span class="bcp14">MAY</span> automatically
+retry them, even those with non-idempotent methods.<a href="#section-7.6-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.6-4">A server <span class="bcp14">MUST NOT</span> indicate that a stream has not been processed unless it can
+guarantee that fact. If frames that are on a stream are passed to the
+application layer for any stream, then REFUSED_STREAM <span class="bcp14">MUST NOT</span> be used for that
+stream, and a GOAWAY frame <span class="bcp14">MUST</span> include a stream identifier that is greater than
+or equal to the given stream identifier.<a href="#section-7.6-4" class="pilcrow">¶</a></p>
+<p id="section-7.6-5">In addition to these mechanisms, the PING frame provides a way for a client to
+easily test a connection. Connections that remain idle can become broken,
+because some middleboxes (for instance, network address translators or load
+balancers) silently discard connection bindings. The PING frame allows a client
+to safely test whether a connection is still active without sending a request.<a href="#section-7.6-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="http2-plus-plus-connections">
+<section id="section-8">
+      <h2 id="name-http-2-plus-plus-connection">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-http-2-plus-plus-connection" class="section-name selfRef">HTTP/2 Plus Plus Connections</a>
+      </h2>
+<p id="section-8-1">This section outlines attributes of HTTP that improve interoperability, reduce
+exposure to known security vulnerabilities, or reduce the potential for
+implementation variation.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<div id="connection-management">
+<section id="section-8.1">
+        <h3 id="name-connection-management">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-connection-management" class="section-name selfRef">Connection Management</a>
+        </h3>
+<p id="section-8.1-1">HTTP/2 Plus Plus connections are persistent. For best performance, it is
+expected that clients will not close connections until it is determined that no
+further communication with a server is necessary (for example, when a user
+navigates away from a particular web page) or until the server closes the
+connection.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">Clients <span class="bcp14">SHOULD NOT</span> open more than one HTTP/2 Plus Plus connection to a given
+host and port pair, where the host is derived from a URI, a selected alternative
+service <span>[<a href="#ALT-SVC" class="cite xref">ALT-SVC</a>]</span>, or a configured proxy.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">A client can create additional connections as replacements, either to replace
+connections that are near to exhausting the available stream identifier space
+(<a href="#stream-states" class="auto internal xref">Section 5.1</a>.1), to refresh the keying material for a TLS connection, or
+to replace connections that have encountered errors
+(<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>).<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">A client <span class="bcp14">MAY</span> open multiple connections to the same IP address and TCP port using
+different Server Name Indication <span>[<a href="#TLS-EXT" class="cite xref">TLS-EXT</a>]</span> values or to provide
+different TLS client certificates but <span class="bcp14">SHOULD</span> avoid creating multiple connections
+with the same configuration.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">Servers are encouraged to maintain open connections for as long as possible but
+are permitted to terminate idle connections if necessary. When either endpoint
+chooses to close the transport-layer TCP connection, the terminating endpoint
+<span class="bcp14">SHOULD</span> first send a GOAWAY (<a href="#goaway" class="auto internal xref">Section 4.2.6</a>) frame so that both endpoints can
+reliably determine whether previously sent frames have been processed and
+gracefully complete or terminate any necessary remaining tasks.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+<div id="connection-reuse">
+<section id="section-8.1.1">
+          <h4 id="name-connection-reuse">
+<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-connection-reuse" class="section-name selfRef">Connection Reuse</a>
+          </h4>
+<p id="section-8.1.1-1">Connections that are made to an origin server, either directly or through a
+tunnel created using the CONNECT method (<a href="#the-connect-method" class="auto internal xref">Section 7.4</a>), <span class="bcp14">MAY</span> be reused
+for requests with multiple different URI authority components. A connection can
+be reused as long as the origin server is authoritative (Section 10). For TCP
+connections without TLS, this depends on the host having resolved to the same IP
+address.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-2">For "https" resources, connection reuse additionally depends on having a
+certificate that is valid for the host in the URI. The certificate presented by
+the server <span class="bcp14">MUST</span> satisfy any checks that the client would perform when forming a
+new TLS connection for the host in the URI. A single certificate can be used to
+establish authority for multiple origins. <span class="contact-name">{field-compression</span> of RFC9110}}
+describes how a client determines whether a server is authoritative for a URI.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-3">In some deployments, reusing a connection for multiple origins can result in
+requests being directed to the wrong origin server. For example, TLS termination
+might be performed by a middlebox that uses the TLS Server Name Indication
+<span>[<a href="#TLS-EXT" class="cite xref">TLS-EXT</a>]</span> extension to select an origin server. This means that it is possible
+for clients to send requests to servers that might not be the intended target
+for the request, even though the server is otherwise authoritative.<a href="#section-8.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-4">A server that does not wish clients to reuse connections can indicate that it is
+not authoritative for a request by sending a 421 (Misdirected Request) status
+code in response to the request (see <span><a href="https://rfc-editor.org/rfc/rfc9110#section-15.5.20" class="relref">Section 15.5.20</a> of [<a href="#RFC9110" class="cite xref">HTTP</a>]</span>).<a href="#section-8.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-5">A client that is configured to use a proxy over HTTP/2 directs requests to that
+proxy through a single connection. That is, all requests sent via a proxy reuse
+the connection to the proxy.<a href="#section-8.1.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="use-of-tls-features">
+<section id="section-8.2">
+        <h3 id="name-use-of-tls-features">
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-use-of-tls-features" class="section-name selfRef">Use of TLS Features</a>
+        </h3>
+<p id="section-8.2-1">Implementations of HTTP/2 Plus Plus <span class="bcp14">MUST</span> use TLS version 1.3 <span>[<a href="#TLS" class="cite xref">TLS</a>]</span> or higher.
+The general TLS usage guidance in <span>[<a href="#TLSBCP" class="cite xref">TLSBCP</a>]</span> <span class="bcp14">SHOULD</span> be followed, with
+some additional restrictions that are specific to HTTP/2 Plus Plus.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-2">The TLS implementation <span class="bcp14">MUST</span> support the Server Name Indication (SNI) <span>[<a href="#TLS-EXT" class="cite xref">TLS-EXT</a>]</span>
+extension to TLS. If the server is identified by a domain name
+<span>[<a href="#DNS-TERMS" class="cite xref">DNS-TERMS</a>]</span>, clients <span class="bcp14">MUST</span> send the server_name TLS extension unless
+an alternative mechanism to indicate the target host is used.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
+<p id="section-8.2-3">HTTP/2 Plus Plus servers <span class="bcp14">MUST NOT</span> send post-handshake TLS 1.3 CertificateRequest
+messages. HTTP/2 Plus Plus clients <span class="bcp14">MUST</span> treat a TLS post-handshake
+CertificateRequest message as a connection error (<a href="#connection-error-handling" class="auto internal xref">Section 5.4.1</a>)
+of type PROTOCOL_ERROR.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-4">The prohibition on post-handshake authentication applies even if the client
+offered the "post_handshake_auth" TLS extension. Post-handshake authentication
+support might be advertised independently of ALPN <span>[<a href="#TLS-ALPN" class="cite xref">TLS-ALPN</a>]</span>. Clients might
+offer the capability for use in other protocols, but inclusion of the extension
+cannot imply support within HTTP/2 Plus Plus.<a href="#section-8.2-4" class="pilcrow">¶</a></p>
+<p id="section-8.2-5"><span>[<a href="#TLS" class="cite xref">TLS</a>]</span> defines other post-handshake messages, NewSessionTicket and KeyUpdate,
+which can be used as they have no direct interaction with HTTP/2 Plus Plus.
+Unless the use of a new type of TLS message depends on an interaction with the
+application-layer protocol, that TLS message can be sent after the handshake
+completes.<a href="#section-8.2-5" class="pilcrow">¶</a></p>
+<p id="section-8.2-6">TLS early data <span class="bcp14">MAY</span> be used to send requests, provided that the guidance in
+<span>[<a href="#RFC8470" class="cite xref">RFC8470</a>]</span> is observed. Clients send requests in early data assuming initial
+values for all server settings.<a href="#section-8.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-3">
+<section id="section-9">
       <h2 id="name-security-considerations">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-3-1">TODO Security<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-9-1">TODO - probably all of <span>[<a href="#RFC9113" class="cite xref">HTTP/2</a>]</span>.<a href="#section-9-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-4">
+<section id="section-10">
       <h2 id="name-iana-considerations">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-4-1">This document has no IANA actions.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">This document has too many IANA actions to write about right now.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-normative-references">
-<section id="section-5">
-      <h2 id="name-normative-references">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<section id="section-11">
+      <h2 id="name-references">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
+<div id="sec-normative-references">
+<section id="section-11.1">
+        <h3 id="name-normative-references">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
 <dl class="references">
+<dt id="COMPRESSION">[COMPRESSION]</dt>
+        <dd>
+<span class="refAuthor">Peon, R.</span> and <span class="refAuthor">H. Ruellan</span>, <span class="refTitle">"HPACK: Header Compression for HTTP/2"</span>, <span class="seriesInfo">RFC 7541</span>, <span class="seriesInfo">DOI 10.17487/RFC7541</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7541">https://www.rfc-editor.org/rfc/rfc7541</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="DNS-TERMS">[DNS-TERMS]</dt>
+        <dd>
+<span class="refAuthor">Hoffman, P.</span>, <span class="refAuthor">Sullivan, A.</span>, and <span class="refAuthor">K. Fujiwara</span>, <span class="refTitle">"DNS Terminology"</span>, <span class="seriesInfo">BCP 219</span>, <span class="seriesInfo">RFC 8499</span>, <span class="seriesInfo">DOI 10.17487/RFC8499</span>, <time datetime="2019-01" class="refDate">January 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8499">https://www.rfc-editor.org/rfc/rfc8499</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9110">[HTTP]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9112">[HTTP/1.1]</dt>
+        <dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP/1.1"</span>, <span class="seriesInfo">STD 99</span>, <span class="seriesInfo">RFC 9112</span>, <span class="seriesInfo">DOI 10.17487/RFC9112</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9112">https://www.rfc-editor.org/rfc/rfc9112</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9113">[HTTP/2]</dt>
+        <dd>
+<span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">C. Benfield, Ed.</span>, <span class="refTitle">"HTTP/2"</span>, <span class="seriesInfo">RFC 9113</span>, <span class="seriesInfo">DOI 10.17487/RFC9113</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9113">https://www.rfc-editor.org/rfc/rfc9113</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="PRIORITIES">[PRIORITIES]</dt>
+        <dd>
+<span class="refAuthor">Oku, K.</span> and <span class="refAuthor">L. Pardue</span>, <span class="refTitle">"Extensible Prioritization Scheme for HTTP"</span>, <span class="seriesInfo">RFC 9218</span>, <span class="seriesInfo">DOI 10.17487/RFC9218</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9218">https://www.rfc-editor.org/rfc/rfc9218</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="QUIC">[QUIC]</dt>
+        <dd>
+<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC3986">[RFC3986]</dt>
+        <dd>
+<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6585">[RFC6585]</dt>
+        <dd>
+<span class="refAuthor">Nottingham, M.</span> and <span class="refAuthor">R. Fielding</span>, <span class="refTitle">"Additional HTTP Status Codes"</span>, <span class="seriesInfo">RFC 6585</span>, <span class="seriesInfo">DOI 10.17487/RFC6585</span>, <time datetime="2012-04" class="refDate">April 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6585">https://www.rfc-editor.org/rfc/rfc6585</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
-    <dd>
+        <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8470">[RFC8470]</dt>
+        <dd>
+<span class="refAuthor">Thomson, M.</span>, <span class="refAuthor">Nottingham, M.</span>, and <span class="refAuthor">W. Tarreau</span>, <span class="refTitle">"Using Early Data in HTTP"</span>, <span class="seriesInfo">RFC 8470</span>, <span class="seriesInfo">DOI 10.17487/RFC8470</span>, <time datetime="2018-09" class="refDate">September 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8470">https://www.rfc-editor.org/rfc/rfc8470</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLS">[TLS]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLS-ALPN">[TLS-ALPN]</dt>
+        <dd>
+<span class="refAuthor">Friedl, S.</span>, <span class="refAuthor">Popov, A.</span>, <span class="refAuthor">Langley, A.</span>, and <span class="refAuthor">E. Stephan</span>, <span class="refTitle">"Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension"</span>, <span class="seriesInfo">RFC 7301</span>, <span class="seriesInfo">DOI 10.17487/RFC7301</span>, <time datetime="2014-07" class="refDate">July 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7301">https://www.rfc-editor.org/rfc/rfc7301</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLSBCP">[TLSBCP]</dt>
+      <dd>
+<span class="refAuthor">Sheffer, Y.</span>, <span class="refAuthor">Holz, R.</span>, and <span class="refAuthor">P. Saint-Andre</span>, <span class="refTitle">"Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)"</span>, <span class="seriesInfo">RFC 7525</span>, <span class="seriesInfo">DOI 10.17487/RFC7525</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7525">https://www.rfc-editor.org/rfc/rfc7525</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
+<div id="sec-informative-references">
+<section id="section-11.2">
+        <h3 id="name-informative-references">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="ALT-SVC">[ALT-SVC]</dt>
+        <dd>
+<span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">McManus, P.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Alternative Services"</span>, <span class="seriesInfo">RFC 7838</span>, <span class="seriesInfo">DOI 10.17487/RFC7838</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7838">https://www.rfc-editor.org/rfc/rfc7838</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="COOKIES">[COOKIES]</dt>
+        <dd>
+<span class="refAuthor">Barth, A.</span>, <span class="refTitle">"HTTP State Management Mechanism"</span>, <span class="seriesInfo">RFC 6265</span>, <span class="seriesInfo">DOI 10.17487/RFC6265</span>, <time datetime="2011-04" class="refDate">April 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6265">https://www.rfc-editor.org/rfc/rfc6265</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-httpbis-connect-tcp">[I-D.ietf-httpbis-connect-tcp]</dt>
+        <dd>
+<span class="refAuthor">Schwartz, B. M.</span>, <span class="refTitle">"Template-Driven HTTP CONNECT Proxying for TCP"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-httpbis-connect-tcp-01</span>, <time datetime="2023-11-06" class="refDate">6 November 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-01">https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-connect-tcp-01</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7323">[RFC7323]</dt>
+        <dd>
+<span class="refAuthor">Borman, D.</span>, <span class="refAuthor">Braden, B.</span>, <span class="refAuthor">Jacobson, V.</span>, and <span class="refAuthor">R. Scheffenegger, Ed.</span>, <span class="refTitle">"TCP Extensions for High Performance"</span>, <span class="seriesInfo">RFC 7323</span>, <span class="seriesInfo">DOI 10.17487/RFC7323</span>, <time datetime="2014-09" class="refDate">September 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7323">https://www.rfc-editor.org/rfc/rfc7323</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TCP">[TCP]</dt>
+        <dd>
+<span class="refAuthor">Postel, J.</span>, <span class="refTitle">"Transmission Control Protocol"</span>, <span class="seriesInfo">RFC 793</span>, <span class="seriesInfo">DOI 10.17487/RFC0793</span>, <time datetime="1981-09" class="refDate">September 1981</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc793">https://www.rfc-editor.org/rfc/rfc793</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="TLS-EXT">[TLS-EXT]</dt>
+      <dd>
+<span class="refAuthor">Eastlake 3rd, D.</span>, <span class="refTitle">"Transport Layer Security (TLS) Extensions: Extension Definitions"</span>, <span class="seriesInfo">RFC 6066</span>, <span class="seriesInfo">DOI 10.17487/RFC6066</span>, <time datetime="2011-01" class="refDate">January 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6066">https://www.rfc-editor.org/rfc/rfc6066</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
 <div id="acknowledgments">
 <section id="appendix-A">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">Thanks to all the contributors of the HTTP/2 and HTTP/3 specs, along with the
+HTTP WG discussion around defining new ALPNs to address issues in HTTP/2
+deployments<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
